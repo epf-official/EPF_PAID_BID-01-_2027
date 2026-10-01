@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPE PAID BID Tournament - 1</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+        body { 
+            font-family: 'Hind Siliguri', sans-serif; 
+            background-color: #090d16;
+        }
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease-in-out;
+        }
+        .view-section.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            
+            <!-- Logo & Title -->
+            <div onclick="navigateTo('view-home')" class="flex items-center gap-3 cursor-pointer group">
+                <div class="bg-gradient-to-tr from-amber-500 to-orange-600 p-2.5 rounded-2xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-trophy text-slate-950 text-xl sm:text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-2xl font-black tracking-wide bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">
+                        EPE PAID BID TOURNAMENT - 1
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400 tracking-wider uppercase font-semibold">Official eSports Management Portal</p>
+                </div>
+            </div>
+
+            <!-- Top Action Controls -->
+            <div class="flex items-center gap-2 sm:gap-3" id="topNavControls">
+                <!-- Dynamic Content via JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- GLOBAL TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="fixed top-24 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- MAIN VIEW CONTAINER (MULTI-PAGE ROUTING SYSTEM) -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full">
+
+        <!-- ================================================================= -->
+        <!-- VIEW 1: HOME INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-home" class="view-section active space-y-10">
+            
+            <!-- Notice Board Card -->
+            <div class="bg-gradient-to-r from-amber-950/40 via-slate-900/90 to-amber-950/40 border border-amber-500/30 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl"></div>
+                <div class="flex items-start gap-4">
+                    <div class="bg-amber-500/20 p-3.5 rounded-2xl text-amber-400 border border-amber-500/30 shrink-0">
+                        <i class="fa-solid fa-bullhorn text-2xl animate-pulse"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold text-amber-400 tracking-wider uppercase">অফিশিয়াল নোটিশ বোর্ড (Official Notice)</span>
+                        <p id="homeNoticeText" class="text-slate-200 text-sm sm:text-base font-medium leading-relaxed">
+                            ট্যুর্নামেন্টের তথ্য লোড হচ্ছে...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Tournament Feature Navigation Grid -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-compass text-amber-400"></i>
+                        <span>ট্যুর্নামেন্ট মেনু ও ইন্টারফেসসমূহ</span>
+                    </h2>
+                    <span class="text-xs text-slate-500">ইন্টারফেসে প্রবেশ করতে ক্লিক করুন</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5">
+                    
+                    <!-- Squad Submit Interface Button -->
+                    <button onclick="navigateTo('view-squad')" class="bg-slate-900/80 hover:bg-indigo-950/60 border border-slate-800 hover:border-indigo-500/50 p-5 rounded-2xl flex flex-col items-center text-center gap-3 transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 group">
+                        <div class="bg-indigo-500/10 p-3.5 rounded-2xl text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-users-viewfinder text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-indigo-300">Squad Submit</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">ম্যাচ ডে ৫v৫ স্কোয়াড</p>
+                        </div>
+                    </button>
+
+                    <!-- Fixture Interface Button -->
+                    <button onclick="navigateTo('view-fixture')" class="bg-slate-900/80 hover:bg-emerald-950/60 border border-slate-800 hover:border-emerald-500/50 p-5 rounded-2xl flex flex-col items-center text-center gap-3 transition-all duration-300 shadow-lg hover:shadow-emerald-500/10 group">
+                        <div class="bg-emerald-500/10 p-3.5 rounded-2xl text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-calendar-days text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-emerald-300">Fixture</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">১২টি ম্যাচডে ফিক্সচার</p>
+                        </div>
+                    </button>
+
+                    <!-- Result Submit Interface Button -->
+                    <button onclick="navigateTo('view-result')" class="bg-slate-900/80 hover:bg-amber-950/60 border border-slate-800 hover:border-amber-500/50 p-5 rounded-2xl flex flex-col items-center text-center gap-3 transition-all duration-300 shadow-lg hover:shadow-amber-500/10 group">
+                        <div class="bg-amber-500/10 p-3.5 rounded-2xl text-amber-400 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
+                            <i class="fa-solid fa-square-poll-vertical text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-amber-300">Result Submit</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">ম্যাচ পয়েন্ট ও সুপার ম্যাচ</p>
+                        </div>
+                    </button>
+
+                    <!-- Points Table Interface Button -->
+                    <button onclick="navigateTo('view-points')" class="bg-slate-900/80 hover:bg-yellow-950/60 border border-slate-800 hover:border-yellow-500/50 p-5 rounded-2xl flex flex-col items-center text-center gap-3 transition-all duration-300 shadow-lg hover:shadow-yellow-500/10 group">
+                        <div class="bg-yellow-500/10 p-3.5 rounded-2xl text-yellow-400 group-hover:scale-110 group-hover:bg-yellow-500 group-hover:text-slate-950 transition-all">
+                            <i class="fa-solid fa-trophy text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-yellow-300">Points Table</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">লাইভ লিডারবোর্ড</p>
+                        </div>
+                    </button>
+
+                    <!-- Rules Interface Button -->
+                    <button onclick="navigateTo('view-rules')" class="bg-slate-900/80 hover:bg-rose-950/60 border border-slate-800 hover:border-rose-500/50 p-5 rounded-2xl flex flex-col items-center text-center gap-3 transition-all duration-300 shadow-lg hover:shadow-rose-500/10 group col-span-2 sm:col-span-1">
+                        <div class="bg-rose-500/10 p-3.5 rounded-2xl text-rose-400 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all">
+                            <i class="fa-solid fa-book-bookmark text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base text-slate-200 group-hover:text-rose-300">Rules</h3>
+                            <p class="text-[11px] text-slate-500 mt-0.5">নিয়মাবলী ও নির্দেশিকা</p>
+                        </div>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- Registered Teams & Player Profiles Grid Section -->
+            <div class="space-y-6">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2.5">
+                        <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+                        <span>Teams and Player Profiles</span>
+                    </h2>
+                    <span id="approvedTeamsCount" class="text-xs bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full border border-indigo-500/20 font-semibold">
+                        0টি টিম অনুমোদিত
+                    </span>
+                </div>
+
+                <div id="teamsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Action Highlights Photo Gallery Section -->
+            <div class="space-y-6">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2.5">
+                        <i class="fa-solid fa-images text-amber-400"></i>
+                        <span>Auction & Action Highlights</span>
+                    </h2>
+                    <span class="text-xs text-slate-500">অফিশিয়াল গ্যালারি</span>
+                </div>
+
+                <div id="highlightsGallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Dynamic Gallery Posters -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 2: DEDICATED TEAM REGISTRATION / SIGNUP INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-registration" class="view-section space-y-6 max-w-3xl mx-auto">
+            <!-- Back Header -->
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+                <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    Registration Portal
+                </span>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-2xl font-black text-amber-400">Team Registration / Signup</h2>
+                    <p class="text-xs text-slate-400 mt-1">মিনিমাম ৬ জন এবং সর্বোচ্চ ৮ জন প্লেয়ারের তথ্য দিয়ে ফর্মটি পূরণ করুন।</p>
+                </div>
+
+                <form id="teamRegForm" class="space-y-6">
+                    <!-- Team Basic Details -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">Team Name <span class="text-amber-400">(BOLD LETTER)</span></label>
+                            <input type="text" id="regTeamName" required placeholder="উদাহরণ: ROYAL STRIKERS" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm uppercase font-bold text-amber-400 focus:outline-none focus:border-amber-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">Captain Name</label>
+                            <input type="text" id="regCaptainName" required placeholder="ক্যাপ্টেনের পুরো নাম" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">Email Address</label>
+                            <input type="email" id="regEmail" required placeholder="ক্যাপ্টেনের ইমেইল" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">Password</label>
+                            <input type="password" id="regPassword" required placeholder="লগইনের জন্য গোপন পাসওয়ার্ড" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                        </div>
+                    </div>
+
+                    <!-- Players Grid Setup -->
+                    <div class="space-y-4 pt-2">
+                        <h3 class="text-sm font-bold text-indigo-400 border-b border-slate-800 pb-2 flex items-center justify-between">
+                            <span>প্লেয়ারদের তালিকা (Player Information)</span>
+                            <span class="text-[11px] font-normal text-slate-400">P1-P6 আবশ্যক, P7-P8 ঐচ্ছিক</span>
+                        </h3>
+
+                        <div class="space-y-3">
+                            <!-- Player 1 (Auto Captain) -->
+                            <div class="bg-slate-950/80 border border-amber-500/30 p-4 rounded-2xl space-y-2">
+                                <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-crown text-xs"></i> Player 1 (Captain)
+                                </span>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                    <input type="text" id="p1_name" readonly placeholder="Auto-filled Captain Name" class="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-300 cursor-not-allowed">
+                                    <input type="text" id="p1_uid" required placeholder="In-Game UID *" class="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-amber-500">
+                                    <input type="text" id="p1_device" required placeholder="Device Name *" class="bg-slate-900 border border-slate-800 rounded-lg px-3.5 py-2 text-xs focus:outline-none focus:border-amber-500">
+                                </div>
+                            </div>
+
+                            <!-- Players 2 to 8 Generator -->
+                            <div id="playerInputsWrapper" class="space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="regSubmitBtn" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 rounded-2xl transition-all duration-200 shadow-xl shadow-emerald-600/20 flex items-center justify-center gap-2 text-base">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>টিম রেজিস্ট্রেশন নিশ্চিত করুন</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 3: DEDICATED LOGIN INTERFACE (CAPTAIN & ADMIN) -->
+        <!-- ================================================================= -->
+        <section id="view-login" class="view-section space-y-6 max-w-md mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <!-- Login Role Toggle Tabs -->
+                <div class="grid grid-cols-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+                    <button id="tabCaptainBtn" onclick="switchLoginTab('captain')" class="py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all bg-indigo-600 text-white shadow-md">
+                        <i class="fa-solid fa-user-tie mr-1"></i> Captain Login
+                    </button>
+                    <button id="tabAdminBtn" onclick="switchLoginTab('admin')" class="py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-user-gear mr-1"></i> Admin Login
+                    </button>
+                </div>
+
+                <!-- Captain Login Form -->
+                <form id="captainLoginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">ক্যাপ্টেনের ইমেইল</label>
+                        <input type="email" id="capEmailInput" required placeholder="আপনার রেজিস্টার্ড ইমেইল" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">পাসওয়ার্ড</label>
+                        <input type="password" id="capPassInput" required placeholder="পাসওয়ার্ড দিন" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30">
+                        ক্যাপ্টেন পোর্টাল লগইন
+                    </button>
+                </form>
+
+                <!-- Admin Login Form (Initially Hidden) -->
+                <form id="adminLoginForm" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">এডমিন পাসওয়ার্ড</label>
+                        <input type="password" id="adminPassInput" required placeholder="এডমিন সিক্রেট পাসওয়ার্ড" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500">
+                    </div>
+                    <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-rose-600/30">
+                        এডমিন ড্যাশবোর্ডে প্রবেশ
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 4: DEDICATED SQUAD SUBMIT INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-squad" class="view-section space-y-6 max-w-2xl mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+                <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+                    Squad Portal
+                </span>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-2xl font-bold text-indigo-400 flex items-center gap-2">
+                        <i class="fa-solid fa-users-viewfinder"></i> Squad Submit (5v5 Player Selection)
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">ম্যাচডের জন্য আপনার নিবন্ধিত প্লেয়ারদের মধ্য থেকে ঠিক ৫ জন সিলেক্ট করে সাবমিট করুন।</p>
+                </div>
+
+                <div id="squadSubmitContent">
+                    <!-- Loaded dynamically based on Login State -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 5: DEDICATED FIXTURE INTERFACE (12 MATCHDAYS) -->
+        <!-- ================================================================= -->
+        <section id="view-fixture" class="view-section space-y-6 max-w-4xl mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+                <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    Match Schedule
+                </span>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h2 class="text-2xl font-bold text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-days"></i> Tournament Fixtures
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">রাউন্ড-রবিন ডাবল ফরম্যাট (১২টি ম্যাচডে)</p>
+                    </div>
+                </div>
+
+                <div id="fixturesListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 6: DEDICATED RESULT SUBMIT INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-result" class="view-section space-y-6 max-w-2xl mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+                <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+                    Result Reporting
+                </span>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-2xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-square-poll-vertical"></i> Result Submit & Super Match
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">ক্যাপ্টেনরা ম্যাচের ফলাফল সাবমিট করতে পারবেন। ড্র হলে সুপার ম্যাচ ট্রিগার হবে।</p>
+                </div>
+
+                <div id="resultSubmitContent">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 7: DEDICATED POINTS TABLE INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-points" class="view-section space-y-6 max-w-4xl mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+                <span class="text-xs font-bold text-yellow-400 bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/20">
+                    Live Leaderboard
+                </span>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy"></i> Tournament Points Table
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">ম্যাচ জয়ের উপর ভিত্তি করে অটোমেটিক আপডেটকৃত পয়েন্ট টেবিল।</p>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-800">
+                    <table class="w-full text-sm text-left border-collapse">
+                        <thead class="bg-slate-950 text-slate-400 text-xs uppercase tracking-wider">
+                            <tr>
+                                <th class="p-4">Rank & Team</th>
+                                <th class="p-4 text-center">Played (P)</th>
+                                <th class="p-4 text-center">Won (W)</th>
+                                <th class="p-4 text-center">Lost (L)</th>
+                                <th class="p-4 text-center">Draw (D)</th>
+                                <th class="p-4 text-center text-yellow-400 font-bold">Points (PTS)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pointsTableBody" class="divide-y divide-slate-800/80 bg-slate-900/50">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 8: DEDICATED RULES INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-rules" class="view-section space-y-6 max-w-3xl mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+                <div class="border-b border-slate-800 pb-3">
+                    <h2 class="text-2xl font-bold text-rose-400 flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark"></i> Tournament Guidelines & Rules
+                    </h2>
+                </div>
+
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <h3 class="font-bold text-amber-400 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-dot text-xs"></i> টিম ও স্কোয়াড নিয়মনীতি
+                        </h3>
+                        <p class="text-xs text-slate-400">১. সর্বনিম্ন ৬ জন এবং সর্বোচ্চ ৮ জন প্লেয়ারের তথ্য দিয়ে রেজিস্ট্রেশন সম্পন্ন করতে হবে।</p>
+                        <p class="text-xs text-slate-400">২. প্রতিটি ম্যাচডের আগে ক্যাপ্টেনকে রেজিস্টার্ড প্লেয়ারদের মধ্য থেকে ৫ জন প্লেয়ারের স্কোয়াড সাবমিট করতে হবে।</p>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <h3 class="font-bold text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-dot text-xs"></i> ফিক্সচার ও ম্যাচ ফরম্যাট
+                        </h3>
+                        <p class="text-xs text-slate-400">১. ৪টি টিম নিয়ে রাউন্ড-রবিন ডাবল ফরম্যাটে মোট ১২টি অল্টারনেটিং ম্যাচডে হবে (A vs B, C vs D...)।</p>
+                        <p class="text-xs text-slate-400">২. একদিনে পরপর দুটি ম্যাচডে থাকলেও কোনো টিমের সাথে সাথে টানা দ্বিতীয় ম্যাচ থাকবে না।</p>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <h3 class="font-bold text-indigo-400 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-dot text-xs"></i> পয়েন্ট ও সুপার ম্যাচ
+                        </h3>
+                        <p class="text-xs text-slate-400">১. প্রতিটি ম্যাচডে জয়ে ২ পয়েন্ট দেওয়া হবে।</p>
+                        <p class="text-xs text-slate-400">২. ম্যাচডে ড্র হলে রেজাল্ট সাবমিট পেজ থেকে একটি ১v১ বা ২v২ সুপার ম্যাচ খেলা হবে যা থেকে বিজয়ী টিম নির্বাচিত হবে।</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 9: DEDICATED ADMIN CONTROL PANEL INTERFACE -->
+        <!-- ================================================================= -->
+        <section id="view-admin" class="view-section space-y-6 max-w-5xl mx-auto">
+            <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-white flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান
+                </button>
+                <span class="text-xs font-bold text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+                    Admin Privileges Active
+                </span>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-8 shadow-2xl">
+                <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-black text-rose-400 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear"></i> Admin Control Panel
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">ট্যুর্নামেন্টের সব ডেটা, এপ্রুভাল ও সেটিংস কন্ট্রোল করুন।</p>
+                    </div>
+                </div>
+
+                <!-- Admin Action Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- 1. Pending Team Approvals -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-sm text-slate-200 flex items-center justify-between">
+                            <span>১. পেন্ডিং টিম এপ্রুভাল (Team Approvals)</span>
+                            <i class="fa-solid fa-user-check text-emerald-400"></i>
+                        </h3>
+                        <div id="adminPendingTeamsList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                            <!-- Dynamic pending teams -->
+                        </div>
+                    </div>
+
+                    <!-- 2. Notice & Fixture Draw Controls -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-sm text-slate-200 flex items-center justify-between">
+                            <span>২. ফিক্সচার ও নোটিশ কন্ট্রোল</span>
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                        </h3>
+                        
+                        <div class="space-y-3">
+                            <button onclick="adminGenerate12Fixtures()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-lg shadow-emerald-600/20">
+                                <i class="fa-solid fa-plus-circle mr-1"></i> জেনারেট ১২টি অল্টারনেটিং ম্যাচডে ফিক্সচার
+                            </button>
+
+                            <div class="space-y-1">
+                                <label class="block text-[11px] font-semibold text-slate-400">লাইভ নোটিশ আপডেট</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="adminNoticeInput" placeholder="নতুন নোটিশ লিখুন..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-amber-500">
+                                    <button onclick="adminUpdateNotice()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Upload Action Highlights / Posters to Storage -->
+                    <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-4 md:col-span-2">
+                        <h3 class="font-bold text-sm text-slate-200 flex items-center justify-between">
+                            <span>৩. অপশন হাইলাইটস / পোস্টার আপলোড (Action Highlights Gallery)</span>
+                            <i class="fa-solid fa-cloud-arrow-up text-indigo-400"></i>
+                        </h3>
+
+                        <form id="adminUploadHighlightForm" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input type="text" id="highlightTitle" placeholder="পোস্টার ক্যাপশন/টাইটেল" class="bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500">
+                            <input type="file" id="highlightFile" accept="image/*" required class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-indigo-600 file:text-white cursor-pointer">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-indigo-600/20">
+                                গ্যালারিতে ছবি আপলোড করুন
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 EPE PAID BID Tournament. All System Operations Managed Powered by Supabase & GitHub Pages.</p>
+    </footer>
+
+    <!-- JS APP LOGIC ENGINE -->
+    <script>
+        // =================================================================
+        // 1. SUPABASE CLIENT INITIALIZATION & APP STATE
+        // =================================================================
+        const SUPABASE_URL = 'https://bdufskqhssmgbhyxtnmi.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_G8IE_FFpezE2MuujsiVxEg_A65_YJHx';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Application State
+        let state = {
+            currentView: 'view-home',
+            loggedInUser: null, // { role: 'captain' | 'admin', team: {...} }
+            teams: [],
+            notices: '',
+            fixtures: [],
+            highlights: []
+        };
+
+        // Render Dynamic Player 2 to Player 8 Registration Form Fields
+        (function renderPlayerFields() {
+            const wrapper = document.getElementById('playerInputsWrapper');
+            let html = '';
+            for(let i=2; i<=8; i++) {
+                const isRequired = i <= 6;
+                html += `
+                    <div class="bg-slate-950/60 border border-slate-800 p-3.5 rounded-2xl space-y-2">
+                        <span class="text-xs font-bold text-slate-400">
+                            Player ${i} ${isRequired ? '<span class="text-rose-400">*</span>' : '<span class="text-slate-500 font-normal">(Optional)</span>'}
+                        </span>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input type="text" id="p${i}_name" ${isRequired ? 'required' : ''} placeholder="Player Name" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                            <input type="text" id="p${i}_uid" ${isRequired ? 'required' : ''} placeholder="In-Game UID" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                            <input type="text" id="p${i}_device" ${isRequired ? 'required' : ''} placeholder="Device Name" class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                        </div>
+                    </div>
+                `;
+            }
+            wrapper.innerHTML = html;
+        })();
+
+        // Auto-Fill Player 1 Name with Captain Name
+        document.getElementById('regCaptainName').addEventListener('input', (e) => {
+            document.getElementById('p1_name').value = e.target.value;
+        });
+
+        // =================================================================
+        // 2. VIEW ROUTER (PAGE SWITCHING LOGIC)
+        // =================================================================
+        function navigateTo(viewId) {
+            // Hide all views
+            const views = document.querySelectorAll('.view-section');
+            views.forEach(v => v.classList.remove('active'));
+
+            // Show selected view
+            const target = document.getElementById(viewId);
+            if (target) {
+                target.classList.add('active');
+                state.currentView = viewId;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // View Specific Dynamic Refresh
+            if (viewId === 'view-squad') renderSquadView();
+            if (viewId === 'view-result') renderResultView();
+            if (viewId === 'view-fixture') renderFixturesList();
+            if (viewId === 'view-points') renderPointsTable();
+        }
+
+        // Toast Notification System
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `p-4 rounded-2xl text-xs font-bold shadow-2xl flex items-center gap-2 border pointer-events-auto transition-all transform translate-x-10 ${
+                isError 
+                ? 'bg-rose-950/90 border-rose-500/40 text-rose-200' 
+                : 'bg-emerald-950/90 border-emerald-500/40 text-emerald-200'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-x-10'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-10');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Render Top Navbar Dynamic Buttons
+        function updateTopNav() {
+            const nav = document.getElementById('topNavControls');
+            if (!state.loggedInUser) {
+                nav.innerHTML = `
+                    <button onclick="navigateTo('view-registration')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-600/20">
+                        <i class="fa-solid fa-user-plus mr-1"></i> Register
+                    </button>
+                    <button onclick="navigateTo('view-login')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl transition-all shadow-md shadow-indigo-600/20">
+                        <i class="fa-solid fa-right-to-bracket mr-1"></i> Login
+                    </button>
+                `;
+            } else {
+                const isCap = state.loggedInUser.role === 'captain';
+                nav.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20">
+                            ${isCap ? `Captain: ${state.loggedInUser.team.captain_name}` : 'Role: Admin'}
+                        </span>
+                        ${!isCap ? `
+                            <button onclick="navigateTo('view-admin')" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl">
+                                Admin Panel
+                            </button>
+                        ` : ''}
+                        <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold p-2 rounded-xl">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            state.loggedInUser = null;
+            updateTopNav();
+            showToast('লগআউট সফল হয়েছে');
+            navigateTo('view-home');
+        }
+
+        // =================================================================
+        // 3. LOAD DATA FROM SUPABASE
+        // =================================================================
+        async function fetchAllData() {
+            try {
+                // Fetch Notice
+                const { data: notice } = await supabase.from('notices').select('content').eq('id', 1).single();
+                if (notice) {
+                    state.notices = notice.content;
+                    document.getElementById('homeNoticeText').innerText = notice.content;
+                }
+
+                // Fetch Approved Teams & Players
+                const { data: teams } = await supabase.from('teams').select('*, players(*)').eq('is_approved', true);
+                if (teams) {
+                    state.teams = teams;
+                    document.getElementById('approvedTeamsCount').innerText = `${teams.length}টি টিম অনুমোদিত`;
+                    renderApprovedTeams(teams);
+                }
+
+                // Fetch Highlights
+                const { data: highlights } = await supabase.from('highlights').select('*').order('created_at', { ascending: false });
+                if (highlights) renderHighlights(highlights);
+
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderApprovedTeams(teams) {
+            const container = document.getElementById('teamsContainer');
+            if (!teams || teams.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-xs col-span-2 py-8 text-center bg-slate-900/40 rounded-2xl border border-slate-800">এখনো কোনো টিম অনুমোদিত হয়নি।</p>`;
+                return;
+            }
+
+            container.innerHTML = teams.map(t => {
+                const playersList = t.players.sort((a,b)=>a.player_number - b.player_number).map(p => `
+                    <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 text-xs flex items-center justify-between">
+                        <span class="font-bold text-slate-200">P${p.player_number}: ${p.name}</span>
+                        <span class="text-slate-400 font-mono text-[11px]">UID: ${p.uid} | ${p.device}</span>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-4 hover:border-indigo-500/40 transition-all shadow-xl">
+                        <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                            <h3 class="text-lg font-black text-amber-400 tracking-wider">${t.team_name}</h3>
+                            <span class="text-xs bg-indigo-500/10 text-indigo-300 font-bold px-3 py-1 rounded-full border border-indigo-500/20">
+                                Capt: ${t.captain_name}
+                            </span>
+                        </div>
+                        <div class="space-y-2">
+                            ${playersList}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderHighlights(list) {
+            const gallery = document.getElementById('highlightsGallery');
+            if (!list || list.length === 0) {
+                gallery.innerHTML = `<p class="text-slate-500 text-xs col-span-full py-8 text-center">গ্যালারিতে এখনো কোনো ছবি আপলোড করা হয়নি।</p>`;
+                return;
+            }
+            gallery.innerHTML = list.map(h => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden group hover:border-amber-500/40 transition-all shadow-xl">
+                    <div class="h-48 overflow-hidden bg-slate-950">
+                        <img src="${h.image_url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    ${h.title ? `<p class="p-3 text-xs font-bold text-slate-300 text-center truncate">${h.title}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // =================================================================
+        // 4. TEAM REGISTRATION SUBMISSION
+        // =================================================================
+        document.getElementById('teamRegForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('regSubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> সেভ করা হচ্ছে...`;
+
+            try {
+                const teamName = document.getElementById('regTeamName').value.toUpperCase();
+                const captainName = document.getElementById('regCaptainName').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+
+                // Insert Team
+                const { data: team, error: tErr } = await supabase.from('teams').insert([{
+                    team_name: teamName, captain_name: captainName, email: email, password: password
+                }]).select().single();
+
+                if (tErr) throw tErr;
+
+                // Collect Players Data
+                const players = [];
+                for(let i=1; i<=8; i++) {
+                    const name = document.getElementById(`p${i}_name`).value;
+                    const uid = document.getElementById(`p${i}_uid`).value;
+                    const device = document.getElementById(`p${i}_device`).value;
+                    if (name && uid && device) {
+                        players.push({ team_id: team.id, player_number: i, name: name, uid: uid, device: device });
+                    }
+                }
+
+                const { error: pErr } = await supabase.from('players').insert(players);
+                if (pErr) throw pErr;
+
+                showToast('টিম রেজিস্ট্রেশন সফল হয়েছে! এডমিন এপ্রুভালের জন্য অপেক্ষা করুন।');
+                document.getElementById('teamRegForm').reset();
+                navigateTo('view-home');
+
+            } catch (err) {
+                showToast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>টিম রেজিস্ট্রেশন নিশ্চিত করুন</span>`;
+            }
+        });
+
+        // =================================================================
+        // 5. LOGIN SYSTEM SWITCH & HANDLERS
+        // =================================================================
+        function switchLoginTab(role) {
+            const capBtn = document.getElementById('tabCaptainBtn');
+            const admBtn = document.getElementById('tabAdminBtn');
+            const capForm = document.getElementById('captainLoginForm');
+            const admForm = document.getElementById('adminLoginForm');
+
+            if (role === 'captain') {
+                capBtn.className = 'py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all bg-indigo-600 text-white shadow-md';
+                admBtn.className = 'py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-400 hover:text-white';
+                capForm.classList.remove('hidden');
+                admForm.classList.add('hidden');
+            } else {
+                admBtn.className = 'py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all bg-rose-600 text-white shadow-md';
+                capBtn.className = 'py-2.5 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-400 hover:text-white';
+                admForm.classList.remove('hidden');
+                capForm.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('captainLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('capEmailInput').value;
+            const pass = document.getElementById('capPassInput').value;
+
+            const { data: team, error } = await supabase.from('teams').select('*, players(*)').eq('email', email).eq('password', pass).single();
+            if (error || !team) {
+                showToast('ইমেইল অথবা পাসওয়ার্ড ভুল হয়েছে!', true);
+            } else {
+                state.loggedInUser = { role: 'captain', team: team };
+                updateTopNav();
+                showToast(`স্বাগতম ক্যাপ্টেন ${team.captain_name}!`);
+                navigateTo('view-home');
+            }
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('adminPassInput').value;
+            if (pass === 'admin123') {
+                state.loggedInUser = { role: 'admin' };
+                updateTopNav();
+                showToast('এডমিন ড্যাশবোর্ডে প্রবেশের অনুভূতি!');
+                navigateTo('view-admin');
+                loadAdminPendingTeams();
+            } else {
+                showToast('ভুল এডমিন পাসওয়ার্ড!', true);
+            }
+        });
+
+        // =================================================================
+        // 6. SQUAD SUBMIT RENDERER & LOGIC
+        // =================================================================
+        function renderSquadView() {
+            const container = document.getElementById('squadSubmitContent');
+            if (!state.loggedInUser || state.loggedInUser.role !== 'captain') {
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <i class="fa-solid fa-lock text-4xl text-indigo-400"></i>
+                        <p class="text-slate-300 text-sm">স্কোয়াড সাবমিট করার জন্য আগে Captain Login করুন।</p>
+                        <button onclick="navigateTo('view-login')" class="bg-indigo-600 px-5 py-2.5 rounded-xl font-bold text-xs">Login Page</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const team = state.loggedInUser.team;
+            const playersList = team.players.map(p => `
+                <label class="flex items-center gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800 cursor-pointer hover:border-indigo-500/40">
+                    <input type="checkbox" name="squadPlayers" value="${p.id}" class="w-4 h-4 accent-indigo-500 rounded">
+                    <span class="text-xs font-bold text-slate-200">${p.name} (P${p.player_number})</span>
+                    <span class="text-[11px] text-slate-500 ml-auto">UID: ${p.uid}</span>
+                </label>
+            `).join('');
+
+            container.innerHTML = `
+                <form id="squadSubmitForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Matchday নির্বাচন করুন</label>
+                        <select id="squadMatchday" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-amber-400 font-bold focus:outline-none">
+                            ${Array.from({length: 12}, (_, i) => `<option value="${i+1}">Matchday ${i+1}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-slate-300">৫ জন প্লেয়ার টিক মার্ক দিন (Exact 5 Players):</label>
+                        <div class="space-y-2">${playersList}</div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl text-xs transition-all shadow-lg shadow-indigo-600/30">
+                        স্কোয়াড সাবমিট করুন
+                    </button>
+                </form>
+            `;
+
+            document.getElementById('squadSubmitForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const selected = Array.from(document.querySelectorAll('input[name="squadPlayers"]:checked')).map(c => c.value);
+                if (selected.length !== 5) {
+                    showToast('অবশ্যই ঠিক ৫ জন প্লেয়ার সিলেক্ট করতে হবে!', true);
+                    return;
+                }
+                const matchday = document.getElementById('squadMatchday').value;
+                const { error } = await supabase.from('squads').insert([{
+                    team_id: team.id, matchday: parseInt(matchday), selected_players: selected
+                }]);
+                if (error) showToast(error.message, true);
+                else showToast(`Matchday ${matchday} এর জন্য ৫ জন প্লেয়ারের স্কোয়াড সেভ হয়েছে!`);
+            });
+        }
+
+        // =================================================================
+        // 7. FIXTURE DISPLAY ENGINE
+        // =================================================================
+        async function renderFixturesList() {
+            const grid = document.getElementById('fixturesListGrid');
+            const { data: fixtures } = await supabase.from('fixtures').select('*, team1:team1_id(team_name), team2:team2_id(team_name)').order('matchday', { ascending: true });
+
+            if (!fixtures || fixtures.length === 0) {
+                grid.innerHTML = `<p class="text-slate-500 text-xs col-span-full py-8 text-center bg-slate-950/40 rounded-2xl border border-slate-800">এখনো কোনো ফিক্সচার জেনারেট করা হয়নি।</p>`;
+                return;
+            }
+
+            grid.innerHTML = fixtures.map(f => `
+                <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between shadow-md hover:border-emerald-500/30 transition-all">
+                    <span class="text-xs font-bold bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-lg border border-amber-500/20">
+                        MD ${f.matchday}
+                    </span>
+                    <div class="text-xs sm:text-sm font-black text-slate-200 tracking-wide">
+                        <span>${f.team1?.team_name || 'TBD'}</span>
+                        <span class="text-rose-400 mx-2 font-bold">VS</span>
+                        <span>${f.team2?.team_name || 'TBD'}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =================================================================
+        // 8. RESULT SUBMIT & SUPER MATCH ENGINE
+        // =================================================================
+        function renderResultView() {
+            const container = document.getElementById('resultSubmitContent');
+            if (!state.loggedInUser || state.loggedInUser.role !== 'captain') {
+                container.innerHTML = `
+                    <div class="text-center py-8 space-y-4">
+                        <i class="fa-solid fa-lock text-4xl text-amber-400"></i>
+                        <p class="text-slate-300 text-sm">রেজাল্ট সাবমিট করতে Captain Login প্রয়োজন।</p>
+                        <button onclick="navigateTo('view-login')" class="bg-amber-500 text-slate-950 px-5 py-2.5 rounded-xl font-bold text-xs">Login Page</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <form id="resultSubmitForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Matchday নির্বাচন করুন</label>
+                        <select id="resMatchday" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-amber-400 font-bold focus:outline-none">
+                            ${Array.from({length: 12}, (_, i) => `<option value="${i+1}">Matchday ${i+1}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">আপনার টিমের জয় (Wins)</label>
+                            <input type="number" id="myTeamWins" min="0" max="5" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-bold text-emerald-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">বিপক্ষ টিমের জয় (Wins)</label>
+                            <input type="number" id="oppTeamWins" min="0" max="5" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-bold text-rose-400">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3.5 rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20">
+                        ফলাফল সাবমিট করুন
+                    </button>
+                </form>
+            `;
+
+            document.getElementById('resultSubmitForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                showToast('ফলাফল সাবমিট হয়েছে! এডমিন যাচাই করে আপডেট করবেন।');
+            });
+        }
+
+        // =================================================================
+        // 9. POINTS TABLE STANDINGS COMPUTATION
+        // =================================================================
+        async function renderPointsTable() {
+            const body = document.getElementById('pointsTableBody');
+            const { data: teams } = await supabase.from('teams').select('*').eq('is_approved', true);
+
+            if (!teams || teams.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-xs text-slate-500">কোনো পয়েন্ট ডাটা পাওয়া যায়নি।</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = teams.map((t, idx) => `
+                <tr class="hover:bg-slate-950/60 transition-colors">
+                    <td class="p-4 font-bold text-slate-200 flex items-center gap-2">
+                        <span class="w-5 text-center text-xs text-amber-400">#${idx+1}</span>
+                        <span>${t.team_name}</span>
+                    </td>
+                    <td class="p-4 text-center font-mono">0</td>
+                    <td class="p-4 text-center text-emerald-400 font-mono">0</td>
+                    <td class="p-4 text-center text-rose-400 font-mono">0</td>
+                    <td class="p-4 text-center text-slate-400 font-mono">0</td>
+                    <td class="p-4 text-center font-bold text-yellow-400 font-mono text-base">0</td>
+                </tr>
+            `).join('');
+        }
+
+        // =================================================================
+        // 10. ADMIN DASHBOARD OPERATIONS
+        // =================================================================
+        async function loadAdminPendingTeams() {
+            const container = document.getElementById('adminPendingTeamsList');
+            const { data: teams } = await supabase.from('teams').select('*').eq('is_approved', false);
+
+            if (!teams || teams.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-xs py-2">কোনো পেন্ডিং টিম রেজিস্ট্রেশন নেই।</p>`;
+                return;
+            }
+
+            container.innerHTML = teams.map(t => `
+                <div class="flex items-center justify-between bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">${t.team_name}</p>
+                        <p class="text-[11px] text-slate-400">Captain: ${t.captain_name}</p>
+                    </div>
+                    <button onclick="adminApproveTeam('${t.id}')" class="bg-emerald-600 hover:bg-emerald-500 px-3 py-1.5 rounded-lg text-white font-bold">
+                        Approve
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function adminApproveTeam(teamId) {
+            await supabase.from('teams').update({ is_approved: true }).eq('id', teamId);
+            showToast('টিম সফলভাবে এপ্রুভ করা হয়েছে!');
+            loadAdminPendingTeams();
+            fetchAllData();
+        }
+
+        async function adminGenerate12Fixtures() {
+            const { data: teams } = await supabase.from('teams').select('*').eq('is_approved', true);
+            if (!teams || teams.length < 4) {
+                showToast('কমপক্ষে ৪টি টিম এপ্রুভ হতে হবে!', true);
+                return;
+            }
+
+            const [A, B, C, D] = teams;
+            const schedule = [
+                { md: 1, t1: A.id, t2: B.id }, { md: 2, t1: C.id, t2: D.id },
+                { md: 3, t1: A.id, t2: C.id }, { md: 4, t1: B.id, t2: D.id },
+                { md: 5, t1: A.id, t2: D.id }, { md: 6, t1: B.id, t2: C.id },
+                { md: 7, t1: B.id, t2: A.id }, { md: 8, t1: D.id, t2: C.id },
+                { md: 9, t1: C.id, t2: A.id }, { md: 10, t1: D.id, t2: B.id },
+                { md: 11, t1: D.id, t2: A.id }, { md: 12, t1: C.id, t2: B.id }
+            ];
+
+            await supabase.from('fixtures').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+            const { error } = await supabase.from('fixtures').insert(schedule.map(s => ({ matchday: s.md, team1_id: s.t1, team2_id: s.t2 })));
+
+            if (error) showToast(error.message, true);
+                else showToast('১২টি ম্যাচডের অল্টারনেটিং ফিক্সচার তৈরি সম্পন্ন!');
+        }
+
+        async function adminUpdateNotice() {
+            const text = document.getElementById('adminNoticeInput').value;
+            if (!text) return;
+            await supabase.from('notices').update({ content: text }).eq('id', 1);
+            showToast('নোটিশ আপডেট হয়েছে!');
+            fetchAllData();
+        }
+
+        // Upload Highlights to Storage
+        document.getElementById('adminUploadHighlightForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('highlightFile').files[0];
+            const title = document.getElementById('highlightTitle').value;
+            if (!file) return;
+
+            try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}.${fileExt}`;
+
+                const { error: storageErr } = await supabase.storage.from('highlights').upload(fileName, file);
+                if (storageErr) throw storageErr;
+
+                const { data: urlData } = supabase.storage.from('highlights').getPublicUrl(fileName);
+
+                await supabase.from('highlights').insert([{ image_url: urlData.publicUrl, title: title }]);
+                showToast('হাইলাইটস গ্যালারিতে ছবি আপলোড সম্পন্ন!');
+                fetchAllData();
+            } catch (err) {
+                showToast(err.message, true);
+            }
+        });
+
+        // INITIAL APP LOAD
+        updateTopNav();
+        fetchAllData();
+    </script>
+</body>
+</html>
