@@ -537,6 +537,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // ================= VIEW SWITCHER (STRICT ISOLATED VIEWS) =================
   function navigateTo(viewId) {
+    checkCaptainSession(); // এটি ব্যাক বা নেভিগেট করলেও লগইন ধরে রাখবে
+
     const views = document.querySelectorAll('.view-section');
     views.forEach(v => v.classList.remove('active'));
 
@@ -997,40 +999,105 @@ async function handleCaptainLogin(e) {
         // Initial Calls
         loadNotice();
         loadHomeTeams();
-        // Squad Submit View Renderer
-function renderSquadSubmitView() {
+ // ১. সেশন ধরে রাখার ফাংশন
+function checkCaptainSession() {
     if (!currentCaptainTeam) {
         const saved = localStorage.getItem('currentCaptain');
-        if (saved) currentCaptainTeam = JSON.parse(saved);
+        if (saved) {
+            try { currentCaptainTeam = JSON.parse(saved); } catch(e){}
+        }
     }
+    return currentCaptainTeam;
+}
 
+// ২. ডাটাবেজের `players(*)` সম্পর্ক অনুযায়ী স্কোয়াড ভিউ রেন্ডার
+async function renderSquadSubmitView() {
+    const teamSession = checkCaptainSession();
     const container = document.getElementById('squad-submission-box');
     if (!container) return;
 
-    if (!currentCaptainTeam) {
+    if (!teamSession) {
         container.innerHTML = `
-            <p class="text-xs text-amber-400 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20 text-center">
-                💡 স্কোয়াড জমা দেওয়ার জন্য আগে "ক্যাপ্টেন লগইন" সম্পন্ন করুন।
-            </p>`;
+            <div class="text-center p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
+                <p class="text-amber-400 text-sm font-medium mb-3">💡 স্কোয়াড জমা দেওয়ার জন্য আগে "ক্যাপ্টেন লগইন" সম্পন্ন করুন।</p>
+                <button onclick="navigateTo('view-home')" class="bg-amber-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-md">হোম পেজে যান</button>
+            </div>`;
         return;
     }
 
-    const team = currentCaptainTeam;
-    const playerList = [team.p1_name, team.p2_name, team.p3_name, team.p4_name, team.p5_name, team.p6_name, team.p7_name, team.p8_name].filter(Boolean);
-    
-    let playersHtml = playerList.map(p => `
+    container.innerHTML = `<div class="text-center text-slate-400 text-sm p-6">⏳ আপনার ডাটা ও ফিক্সচার লোড হচ্ছে...</div>`;
+
+    let team = teamSession;
+    let playerList = [];
+
+    try {
+        // ডাটাবেজ থেকে টিমের প্লেয়ারদের নাম (p.name) নিয়ে আসা
+        const { data: teamData } = await sb.from('teams').select('*, players(*)').eq('id', teamSession.id).single();
+        if (teamData) {
+            team = teamData;
+            if (teamData.players && Array.isArray(teamData.players)) {
+                playerList = teamData.players.map(p => p.name).filter(Boolean);
+            }
+        }
+    } catch (err) {
+        console.log("Team players fetch error:", err);
+    }
+
+    // লোকাল ব্যাকআপ ফিল্টারিং
+    if (playerList.length === 0 && team.players && Array.isArray(team.players)) {
+        playerList = team.players.map(p => typeof p === 'object' ? p.name : p).filter(Boolean);
+    }
+
+    // শুধুমাত্র ওই টিমের নির্ধারিত ম্যাচ ডে ফিল্টার করা
+    let captainMatchDays = [];
+    try {
+        const myTeamName = (team.team_name || team.name || '').trim().toLowerCase();
+        const { data: fixtures } = await sb.from('fixtures').select('*');
+        
+        if (fixtures && fixtures.length > 0) {
+            const myFixtures = fixtures.filter(f => 
+                (f.team1 && f.team1.trim().toLowerCase() === myTeamName) ||
+                (f.team2 && f.team2.trim().toLowerCase() === myTeamName)
+            );
+            
+            const daysSet = new Set();
+            myFixtures.forEach(f => {
+                if (f.match_day) daysSet.add(f.match_day);
+            });
+            captainMatchDays = Array.from(daysSet);
+        }
+    } catch (err) {
+        console.log("Fixtures filter error:", err);
+    }
+
+    // ড্রপডাউন অপশন জেনারেট
+    let matchDayOptions = '';
+    if (captainMatchDays.length > 0) {
+        matchDayOptions = captainMatchDays.map(day => `<option value="${day}">${day}</option>`).join('');
+    } else {
+        for (let i = 1; i <= 12; i++) {
+            matchDayOptions += `<option value="Match Day ${i}">Match Day ${i}</option>`;
+        }
+    }
+
+    // প্লেয়ারদের নাম টিক মার্ক বক্সে দেখানো
+    let playersHtml = playerList.map(pName => `
         <label class="flex items-center gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-amber-500/50 transition">
-            <input type="checkbox" name="squad-player" value="${p}" class="w-4 h-4 accent-amber-500">
-            <span class="text-sm font-medium text-slate-200">${p}</span>
+            <input type="checkbox" name="squad-player" value="${pName}" class="w-4 h-4 accent-amber-500">
+            <span class="text-sm font-medium text-slate-200">${pName}</span>
         </label>
     `).join('');
+
+    if (!playersHtml) {
+        playersHtml = `<p class="text-xs text-rose-400 p-2 border border-rose-500/20 rounded-lg">⚠️ প্লেয়ারদের নাম পাওয়া যায়নি।</p>`;
+    }
 
     container.innerHTML = `
         <div class="space-y-4">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <div>
-                    <h3 class="font-bold text-amber-400 text-base">${team.team_name}</h3>
-                    <p class="text-xs text-slate-400">ক্যাপ্টেন: ${team.captain_name}</p>
+                    <h3 class="font-bold text-amber-400 text-base">${team.team_name || team.name || 'টিমের নাম'}</h3>
+                    <p class="text-xs text-slate-400">ক্যাপ্টেন: ${team.captain_name || team.captain || 'N/A'}</p>
                 </div>
                 <button onclick="logoutCaptain()" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg transition font-medium">
                     🚪 লগআউট
@@ -1039,19 +1106,14 @@ function renderSquadSubmitView() {
 
             <form onsubmit="handleSquadSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">ম্যাচ ডে নির্বাচন করুন</label>
+                    <label class="block text-xs text-slate-400 mb-1">আপনার খেলার নির্ধারিত ম্যাচ ডে নির্বাচন করুন:</label>
                     <select id="squad-match-day" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                        <option value="Match Day 1">Match Day 1</option>
-                        <option value="Match Day 2">Match Day 2</option>
-                        <option value="Match Day 3">Match Day 3</option>
-                        <option value="Match Day 4">Match Day 4</option>
-                        <option value="Match Day 5">Match Day 5</option>
-                        <option value="Match Day 6">Match Day 6</option>
+                        ${matchDayOptions}
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs text-slate-400 mb-2">আজকের ৫ জন মূল প্লেয়ার টিক দিন (5vs5):</label>
+                    <label class="block text-xs text-slate-400 mb-2">আজকের ৫ জন মূল প্লেয়ার সিলেক্ট করুন (5vs5):</label>
                     <div class="grid grid-cols-1 gap-2">${playersHtml}</div>
                 </div>
 
@@ -1063,6 +1125,7 @@ function renderSquadSubmitView() {
     `;
 }
 
+// ৩. লগআউট
 function logoutCaptain() {
     localStorage.removeItem('currentCaptain');
     currentCaptainTeam = null;
