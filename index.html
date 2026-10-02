@@ -589,7 +589,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         // Submit Team Registration
         async function handleRegistrationSubmit(e) {
             e.preventDefault();
-            if (!sb) return alert("অনুগ্রহ করে কোডে সুপাবেজের Publishable Key টি বসান!");
+            
 
             const teamName = document.getElementById('reg-team-name').value.toUpperCase().trim();
             const captainName = document.getElementById('reg-captain-name').value.trim();
