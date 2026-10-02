@@ -1012,14 +1012,18 @@ function checkCaptainSession() {
     return currentCaptainTeam;
 }
 
-// ক্যাপ্টেন লগইন হ্যান্ডলার (লগইন শেষে হোম পেজে নিয়ে যাবে)
+// ক্যাপ্টেন লগইন হ্যান্ডলার (HTML এর cap-login-email ও cap-login-pass আইডি দিয়ে)
 async function handleCaptainLogin(e) {
     if (e) e.preventDefault();
-    const email = document.getElementById('cap-email')?.value?.trim();
-    const password = document.getElementById('cap-pass')?.value?.trim();
+    
+    const emailInput = document.getElementById('cap-login-email');
+    const passInput = document.getElementById('cap-login-pass');
+
+    const email = emailInput ? emailInput.value.trim() : '';
+    const password = passInput ? passInput.value.trim() : '';
 
     if (!email || !password) {
-        alert("ইমেইল এবং পাসওয়ার্ড দিন!");
+        alert("ইমেইল এবং পাসওয়ার্ড সঠিকভাবে পূরণ করুন!");
         return;
     }
 
@@ -1031,22 +1035,22 @@ async function handleCaptainLogin(e) {
             .single();
 
         if (error || !team) {
-            alert("ভুল ইমেইল বা পাসওয়ার্ড!");
+            alert("ভুল ইমেইল বা পাসওয়ার্ড দেওয়া হয়েছে!");
             return;
         }
 
         if (team.status !== 'approved') {
-            alert("আপনার টিম এখনো এডমিন কর্তৃক এপ্রুভ হয়নি!");
+            alert("আপনার টিম এখনো এডমিন কর্তৃক এপ্রুভ করা হয়নি!");
             return;
         }
 
-        // সেশন সেভ
+        // লগইন সফল - ব্রাউজারে সেশন সেভ
         currentCaptainTeam = team;
         localStorage.setItem('currentCaptain', JSON.stringify(team));
 
-        alert(`স্বাগতম, ${team.captain_name || 'ক্যাপ্টেন'}! লগইন সফল হয়েছে।`);
+        alert(`স্বাগতম ${team.captain_name || team.team_name || 'ক্যাপ্টেন'}! লগইন সফল হয়েছে।`);
         
-        // ডিরেক্ট হোম পেজে নিয়ে যাবে
+        // লগইন শেষে সরাসরি হোম পেজে নিয়ে যাবে
         navigateTo('view-home');
     } catch (err) {
         console.error("Login error:", err);
@@ -1088,7 +1092,7 @@ async function renderSquadSubmitView() {
         console.log("Team fetch error:", err);
     }
 
-    // ফিক্সচার থেকে শুধুমাত্র এই টিমের খেলার ম্যাচ ডে ফিল্টার করা
+    // ফিক্সচার থেকে শুধুমাত্র এই টিমের খেলার নির্ধারিত ম্যাচ ডে ফিল্টার করা
     let captainMatchDays = [];
     try {
         const myTeamName = (team.team_name || team.name || '').trim().toLowerCase();
@@ -1163,7 +1167,7 @@ async function renderSquadSubmitView() {
     `;
 }
 
-// স্কোয়াড সাবমিট হ্যান্ডলার (অটোমেটিক রিলোড হবে না, বার্তা দেবে)
+// স্কোয়াড সাবমিট হ্যান্ডলার
 async function handleSquadSubmit(e) {
     if (e) e.preventDefault();
     const team = checkCaptainSession();
@@ -1177,7 +1181,7 @@ async function handleSquadSubmit(e) {
     const selectedPlayers = Array.from(selectedBoxes).map(cb => cb.value);
 
     if (selectedPlayers.length === 0) {
-        alert("কমপক্ষে প্লেয়ার নির্বাচন করুন!");
+        alert("কমপক্ষে ১ জন প্লেয়ার নির্বাচন করুন!");
         return;
     }
 
@@ -1191,15 +1195,13 @@ async function handleSquadSubmit(e) {
         }]);
 
         if (error) {
-            console.error("Squad submit error:", error);
             alert("স্কোয়াড জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
         } else {
-            alert(`✅ ${matchDay}-এর জন্য আপনার ৫ জন প্লেয়ারের স্কোয়াড সফলতা সহ জমা দেওয়া হয়েছে!\n\nএডমিন প্যানেল থেকে এপ্রুভ হওয়ার পর ফিক্সচার শিডিউল আপডেট হয়ে যাবে।`);
+            alert(`✅ ${matchDay}-এর জন্য আপনার স্কোয়াড সফলতা সহ জমা দেওয়া হয়েছে!\n\nএডমিন প্যানেল থেকে এপ্রুভ হওয়ার জন্য অপেক্ষমাণ রয়েছে।`);
             navigateTo('view-home');
         }
     } catch (err) {
-        console.error("Submit error:", err);
-        alert("সার্ভার ত্রুটি! আবার চেষ্টা করুন।");
+        alert("সার্ভার ত্রুটি!");
     }
 }
 
