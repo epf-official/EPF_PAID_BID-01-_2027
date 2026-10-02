@@ -533,26 +533,27 @@ const SUPABASE_ANON_KEY = 'sb_publishable_G8IE_FFpezE2MuujsiVxEg_A65_YJHx';
 // সরাসরি ক্লায়েন্ট তৈরি করুন (কোনো if কন্ডিশন ছাড়া)
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-       let currentCaptainTeam = JSON.parse(localStorage.getItem('currentCaptain')) || null;
+      let currentCaptainTeam = JSON.parse(localStorage.getItem('currentCaptain')) || null;
 
         // ================= VIEW SWITCHER (STRICT ISOLATED VIEWS) =================
         function navigateTo(viewId) {
-            const views = document.querySelectorAll('.view-section');
-            views.forEach(v => v.classList.remove('active'));
+    const views = document.querySelectorAll('.view-section');
+    views.forEach(v => v.classList.remove('active'));
 
-            const target = document.getElementById(viewId);
-            if (target) {
-                target.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+    const target = document.getElementById(viewId);
+    if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                if (viewId === 'view-home') loadNotice(), loadHomeTeams();
-                if (viewId === 'view-teams-profiles') loadFullTeamsAndProfiles();
-                if (viewId === 'view-fixture') loadFixturesList();
-                if (viewId === 'view-points') loadPointsTable();
-                if (viewId === 'view-gallery') loadGalleryGrid();
-                if (viewId === 'view-admin') loadAdminDashboard();
-            }
-        }
+        if (viewId === 'view-home') loadNotice(), loadHomeTeams();
+        if (viewId === 'view-teams-profiles') loadFullTeamsAndProfiles();
+        if (viewId === 'view-fixture') loadFixturesList();
+        if (viewId === 'view-points') loadPointsTable();
+        if (viewId === 'view-gallery') loadGalleryGrid();
+        if (viewId === 'view-admin') loadAdminDashboard();
+        if (viewId === 'view-squad') renderSquadSubmitView(); // <--- এই মিসিং লাইনটি যোগ করা হলো
+    }
+}
 
         // Generate Player Input Fields (6 to 8)
         function renderPlayerRegistrationFields() {
@@ -648,12 +649,9 @@ async function handleCaptainLogin(e) {
         alert("ভুল ইমেইল অথবা পাসওয়ার্ড!");
     } else {
         currentCaptainTeam = data;
-        // ব্রাউজারে ক্যাপ্টেন তথ্য সেভ রাখা
         localStorage.setItem('currentCaptain', JSON.stringify(data));
         alert(`স্বাগতম ক্যাপ্টেন ${data.captain_name} (${data.team_name})!`);
         
-        // স্কোয়াড ভিউ লোড ও নেভিগেট করা (পেজ রিফ্রেশ ছাড়া)
-        if (typeof renderSquadSubmitView === 'function') renderSquadSubmitView();
         navigateTo('view-squad');
     }
 }
