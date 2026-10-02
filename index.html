@@ -3,1376 +3,1407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EPF PAID BID Tournament - 1</title>
+    <title>EPF PAID BID TOURNAMENT - 1 | Official Esports Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase JS Client CDN -->
+    <!-- Google Fonts: Orbitron & Rajdhani -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        esports: {
+                            bg: '#0a0e17',
+                            card: '#121824',
+                            accent: '#ff0055',
+                            cyan: '#00f0ff',
+                            gold: '#ffbd03',
+                            border: '#1f293d'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
         body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background-color: #070a12;
-            color: #f3f4f6;
+            background-color: #0a0e17;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.05), transparent 70%);
         }
-        /* View Display Logic: Strictly Isolated Page Navigation */
-        .view-section {
-            display: none !important;
-            opacity: 0;
-            transition: opacity 0.25s ease-in-out;
+        .neon-border {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            border: 1px solid rgba(0, 240, 255, 0.3);
         }
-        .view-section.active {
-            display: block !important;
-            opacity: 1;
+        .neon-border-pink {
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+        }
+        .text-glow {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+        .text-glow-pink {
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1f293d;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
+<body class="min-h-screen flex flex-col justify-between custom-scrollbar">
 
-    <!-- TOP NAVIGATION HEADER -->
-    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-            
-            <!-- Logo & Title -->
-            <div onclick="navigateTo('view-home')" class="flex items-center gap-3 cursor-pointer group">
-                <div class="bg-gradient-to-tr from-amber-500 to-orange-600 p-2.5 rounded-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                    <i class="fa-solid fa-trophy text-slate-950 text-xl sm:text-2xl"></i>
+    <!-- HEADER & NAVIGATION -->
+    <header class="bg-esports-card/90 backdrop-blur-md sticky top-0 z-50 border-b border-esports-border">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <!-- Brand Logo & Title -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('teams')">
+                <div class="w-12 h-12 bg-gradient-to-tr from-esports-accent to-esports-cyan rounded-lg p-0.5 flex items-center justify-center shadow-lg">
+                    <div class="w-full h-full bg-esports-bg rounded-[7px] flex items-center justify-center">
+                        <i class="fa-solid fa-gamepad text-2xl text-esports-cyan"></i>
+                    </div>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-2xl font-black tracking-wider uppercase bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 bg-clip-text text-transparent">
-                        EPF PAID BID Tournament - 1
+                    <h1 class="font-orbitron font-black text-xl md:text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-esports-cyan via-white to-esports-accent text-glow">
+                        EPF PAID BID TOURNAMENT - 1
                     </h1>
-                    <p class="text-[10px] sm:text-xs text-slate-400 font-semibold tracking-widest uppercase">OFFICIAL ESPORTS PORTAL</p>
+                    <p class="text-xs text-gray-400 font-semibold tracking-widest uppercase">Official Esports Portal</p>
                 </div>
             </div>
 
-            <!-- HEADER BUTTONS -->
-            <div class="flex items-center gap-2 sm:gap-3">
-                <button onclick="navigateTo('view-register')" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-amber-500/10">
+            <!-- Action Buttons & Auth Controls -->
+            <div class="flex items-center space-x-3">
+                <button onclick="openModal('signupModal')" class="bg-gradient-to-r from-esports-accent to-red-600 hover:from-red-600 hover:to-esports-accent text-white font-orbitron text-xs font-bold px-4 py-2.5 rounded shadow-lg transition transform hover:scale-105 flex items-center space-x-2">
                     <i class="fa-solid fa-user-plus"></i>
-                    <span>টিম রেজিস্ট্রেশন</span>
+                    <span>SIGN UP TEAM</span>
                 </button>
 
-                <!-- Login Dropdown Button -->
+                <!-- Login Dropdown -->
                 <div class="relative group">
-                    <button class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition">
-                        <i class="fa-solid fa-right-to-bracket text-amber-400"></i>
-                        <span>লগইন</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] ml-1"></i>
+                    <button class="bg-esports-bg border border-esports-cyan/40 hover:border-esports-cyan text-esports-cyan font-orbitron text-xs font-bold px-4 py-2.5 rounded transition flex items-center space-x-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>LOGIN</span>
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
                     </button>
-                    <!-- Submenu -->
-                    <div class="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl hidden group-hover:block z-50 p-1.5 space-y-1">
-                        <button onclick="navigateTo('view-login-captain')" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-800 rounded-lg flex items-center gap-2 font-medium">
-                            <i class="fa-solid fa-user-shield text-amber-400"></i> ক্যাপ্টেন লগইন
+                    <div class="absolute right-0 mt-2 w-48 bg-esports-card border border-esports-border rounded-lg shadow-2xl py-2 hidden group-hover:block z-50">
+                        <button onclick="openModal('captainLoginModal')" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-esports-cyan/10 hover:text-esports-cyan font-semibold flex items-center space-x-2">
+                            <i class="fa-solid fa-user-shield text-esports-cyan"></i>
+                            <span>Captain Login</span>
                         </button>
-                        <button onclick="navigateTo('view-login-admin')" class="w-full text-left px-3 py-2 text-xs text-red-400 hover:bg-red-950/40 rounded-lg flex items-center gap-2 font-medium">
-                            <i class="fa-solid fa-lock text-red-400"></i> এডমিন প্যানেল
+                        <button onclick="openModal('adminLoginModal')" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-esports-accent/10 hover:text-esports-accent font-semibold flex items-center space-x-2">
+                            <i class="fa-solid fa-lock text-esports-accent"></i>
+                            <span>Admin Login</span>
                         </button>
                     </div>
                 </div>
-            </div>
 
+                <!-- User Session Status Bar -->
+                <div id="userSessionBadge" class="hidden items-center space-x-2 bg-esports-bg border border-esports-border px-3 py-1.5 rounded text-xs font-bold text-esports-gold">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span id="sessionUserTitle">User</span>
+                    <button onclick="logout()" class="text-red-400 hover:text-red-300 ml-2" title="Logout"><i class="fa-solid fa-power-off"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTICE BOARD MARQUEE -->
+        <div class="bg-esports-bg/90 border-y border-esports-border/60 px-4 py-1.5 flex items-center space-x-3 overflow-hidden text-xs">
+            <span class="bg-esports-accent text-white font-orbitron px-2 py-0.5 rounded font-black uppercase tracking-wider animate-pulse flex-shrink-0">
+                <i class="fa-solid fa-bullhorn mr-1"></i> NOTICE
+            </span>
+            <div class="overflow-hidden whitespace-nowrap w-full">
+                <span id="noticeTickerText" class="inline-block animate-marquee text-gray-300 font-medium">
+                    Welcome to EPF PAID BID Tournament - 1! All 4 approved teams must submit 5v5 squads prior to match days.
+                </span>
+            </div>
         </div>
     </header>
 
-    <!-- MAIN VIEWS CONTAINER -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-grow w-full">
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-esports-bg/80 border-b border-esports-border sticky top-[105px] z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-start md:justify-center overflow-x-auto space-x-2 py-2.5 custom-scrollbar">
+            <button onclick="switchTab('teams')" id="tab-teams" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-users text-esports-cyan"></i>
+                <span>TEAMS & PROFILES</span>
+            </button>
+            <button onclick="switchTab('squad')" id="tab-squad" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-user-check text-esports-cyan"></i>
+                <span>SQUAD SUBMIT</span>
+            </button>
+            <button onclick="switchTab('fixtures')" id="tab-fixtures" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-calendar-days text-esports-cyan"></i>
+                <span>FIXTURES</span>
+            </button>
+            <button onclick="switchTab('results')" id="tab-results" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-trophy text-esports-cyan"></i>
+                <span>RESULT SUBMIT</span>
+            </button>
+            <button onclick="switchTab('points')" id="tab-points" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-list-ol text-esports-cyan"></i>
+                <span>POINTS TABLE</span>
+            </button>
+            <button onclick="switchTab('rules')" id="tab-rules" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-book text-esports-cyan"></i>
+                <span>RULES</span>
+            </button>
+            <button onclick="switchTab('gallery')" id="tab-gallery" class="tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition flex items-center space-x-2 flex-shrink-0 border border-transparent hover:border-esports-cyan/40">
+                <i class="fa-solid fa-images text-esports-cyan"></i>
+                <span>HIGHLIGHTS</span>
+            </button>
+            <button id="adminTabBtn" onclick="switchTab('admin')" class="hidden tab-btn px-4 py-2 rounded-md font-orbitron text-xs font-bold transition items-center space-x-2 flex-shrink-0 border border-esports-accent/50 bg-esports-accent/20 text-esports-accent">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>ADMIN PANEL</span>
+            </button>
+        </div>
+    </nav>
 
-        <!-- ================= 1. HOME VIEW ================= -->
-        <div id="view-home" class="view-section active space-y-8">
-            
-            <!-- Notice Board -->
-            <div class="bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border border-amber-500/30 rounded-2xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
-                <div class="flex items-center gap-3 mb-2 text-amber-400 font-bold text-sm tracking-wide">
-                    <i class="fa-solid fa-bullhorn text-lg animate-bounce"></i>
-                    <span>অফিশিয়াল নোটিশ বোর্ড (OFFICIAL NOTICE)</span>
-                </div>
-                <div id="notice-board-text" class="text-slate-300 text-sm sm:text-base leading-relaxed pl-7">
-                    স্বাগতম EPF PAID BID Tournament - 1 এ! রেজিস্ট্রেশন প্রক্রিয়া সচল রয়েছে। সকল ৪টি টিম দ্রুত রেজিস্ট্রেশন সম্পন্ন করুন।
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- SECTION 1: TEAMS & PROFILES -->
+        <section id="sec-teams" class="tab-content space-y-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-esports-border pb-4 gap-4">
+                <div>
+                    <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> REGISTERED TEAMS & ROSTERS
+                    </h2>
+                    <p class="text-sm text-gray-400">Total Approved Teams: <span id="approvedTeamsCount" class="text-esports-gold font-bold">0</span> / 4</p>
                 </div>
             </div>
 
-            <!-- Main Navigation Cards -->
-            <div>
-                <h2 class="text-base font-bold text-slate-300 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-bars-staggered text-amber-400"></i> টুর্নামেন্ট পোর্টালসমূহ
+            <div id="teamsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamic Teams Cards Will Be Injected Here -->
+                <div class="col-span-full text-center py-12 bg-esports-card rounded-xl border border-esports-border">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl text-esports-cyan mb-3"></i>
+                    <p class="text-gray-400 font-orbitron text-sm">Loading teams data...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: SQUAD SUBMIT -->
+        <section id="sec-squad" class="tab-content hidden space-y-6">
+            <div class="border-b border-esports-border pb-4">
+                <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                    <i class="fa-solid fa-user-check"></i> MATCH DAY 5v5 SQUAD SUBMISSION
                 </h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
+                <p class="text-sm text-gray-400">Select 5 starting players from your team roster for the scheduled match day.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Squad Submission Form -->
+                <div class="lg:col-span-1 bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-gold border-b border-esports-border pb-2">Submit Your Squad</h3>
                     
-                    <div onclick="navigateTo('view-teams-profiles')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-amber-400">Teams & Profiles</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">টিম ও প্লেয়ার প্রোফাইল</p>
-                    </div>
-
-                    <div onclick="navigateTo('view-squad')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-blue-500/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-users-gear"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-blue-400">Squad Submit</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">ম্যাচ ডে ৫vs৫ স্কোয়াড</p>
-                    </div>
-
-                    <div onclick="navigateTo('view-fixture')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-calendar-days"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-emerald-400">Fixture</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">১২টি ম্যাচডে ফিক্সচার</p>
-                    </div>
-
-                    <div onclick="navigateTo('view-result')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-purple-500/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-square-poll-vertical"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-purple-400">Result Submit</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">পয়েন্ট ও স্ক্রিনশট</p>
-                    </div>
-
-                    <div onclick="navigateTo('view-points')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-amber-400/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-amber-400/10 text-amber-300 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-ranking-star"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-amber-300">Points Table</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">লাইভ লিডারবোর্ড</p>
-                    </div>
-
-                    <div onclick="navigateTo('view-rules')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-rose-500/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-rose-500/10 text-rose-400 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-book-bookmark"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-rose-400">Rules</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">নিয়মাবলী ও নির্দেশিকা</p>
-                    </div>
-
-                    <div onclick="navigateTo('view-gallery')" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-cyan-500/50 rounded-2xl p-4 cursor-pointer text-center group transition shadow-xl">
-                        <div class="w-12 h-12 mx-auto bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
-                            <i class="fa-solid fa-images"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-200 text-xs sm:text-sm group-hover:text-cyan-400">Auction Highlights</h3>
-                        <p class="text-[10px] text-slate-500 mt-1">ফটো গ্যালারি</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Approved Teams Preview -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-md font-bold text-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-shield-halved text-amber-400"></i> অনুমোদিত টিমসমূহ (Approved Teams)
-                    </h3>
-                    <button onclick="navigateTo('view-teams-profiles')" class="text-xs text-amber-400 hover:underline font-semibold">বিস্তারিত দেখুন →</button>
-                </div>
-                <div id="home-approved-teams-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <p class="text-slate-500 text-sm col-span-full py-4 text-center">কোনো অনুমোদিত টিম এখনো পাওয়া যায়নি।</p>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- ================= 2. TEAM REGISTRATION VIEW ================= -->
-        <div id="view-register" class="view-section max-w-3xl mx-auto space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-user-plus"></i> টিম রেজিস্ট্রেশন (Team Sign Up)
-                    </h2>
-                    <p class="text-xs text-slate-400">আপনার টিমের সাধারণ ও প্লেয়ারদের তথ্য দিয়ে নিবন্ধন করুন</p>
-                </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
-            </div>
-
-            <form id="form-team-register" onsubmit="handleRegistrationSubmit(event)" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-2xl">
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">টিমের নাম (Team Name - BOLD LETTER)*</label>
-                        <input type="text" id="reg-team-name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-400 font-bold tracking-wider uppercase focus:outline-none focus:border-amber-500" placeholder="উদা: ALPHA WARRIORS">
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <form id="squadSubmitForm" onsubmit="handleSquadSubmit(event)" class="space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">ক্যাপ্টেনের নাম (Captain Name)*</label>
-                            <input type="text" id="reg-captain-name" oninput="syncCaptainNameToPlayer1()" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500" placeholder="ক্যাপ্টেনের পুরো নাম">
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 mb-1">SELECT MATCH DAY</label>
+                            <select id="squadMatchDaySelect" class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-200 focus:border-esports-cyan outline-none" required>
+                                <option value="">-- Choose Scheduled Match Day --</option>
+                                <!-- JS Populated -->
+                            </select>
                         </div>
+
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">ইমেইল (Captain Email)*</label>
-                            <input type="email" id="reg-captain-email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500" placeholder="email@example.com">
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 mb-1">YOUR TEAM</label>
+                            <input type="text" id="squadTeamNameInput" readonly class="w-full bg-esports-bg/50 border border-esports-border rounded p-2.5 text-sm text-gray-400 font-bold" placeholder="Login as Captain first" />
                         </div>
+
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">পাসওয়ার্ড (লগইনের জন্য)*</label>
-                            <input type="password" id="reg-captain-pass" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500" placeholder="গোপন পাসওয়ার্ড">
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 mb-2">SELECT 5 PLAYERS (<span id="squadSelectedCount" class="text-esports-cyan">0</span>/5)</label>
+                            <div id="squadPlayerCheckboxes" class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar p-2 bg-esports-bg rounded border border-esports-border">
+                                <p class="text-xs text-gray-500 italic text-center py-4">Please login as a Captain to view your roster.</p>
+                            </div>
                         </div>
-                    </div>
+
+                        <button type="submit" id="squadSubmitBtn" disabled class="w-full bg-esports-cyan hover:bg-cyan-400 disabled:bg-gray-700 disabled:cursor-not-allowed text-black font-orbitron font-bold py-3 rounded shadow transition">
+                            SUBMIT SQUAD FOR APPROVAL
+                        </button>
+                    </form>
                 </div>
 
-                <div class="border-t border-slate-800 pt-5 space-y-4">
-                    <div>
-                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">প্লেয়ারদের বিস্তারিত তথ্য (সর্বনিম্ন ৬ জন, সর্বোচ্চ ৮ জন)</h4>
-                        <p class="text-[11px] text-slate-500">Player 1 অটোমেটিক ক্যাপ্টেনের নামে পূরণ হয়ে যাবে। বাকি প্লেয়ারদের নাম, UID ও ডিভাইসের নাম লিখুন।</p>
+                <!-- Squad Status List -->
+                <div class="lg:col-span-2 bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-cyan border-b border-esports-border pb-2">Submitted Match Squads</h3>
+                    <div id="submittedSquadsList" class="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar">
+                        <!-- JS Dynamic Content -->
                     </div>
-
-                    <div id="players-fields-container" class="space-y-3"></div>
                 </div>
+            </div>
+        </section>
 
-                <button type="submit" id="btn-submit-reg" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold py-3.5 rounded-xl text-sm transition shadow-xl shadow-amber-500/10">
-                    রেজিস্ট্রেশন সম্পূর্ণ করুন (Submit Registration)
-                </button>
-            </form>
-        </div>
-
-        <!-- ================= 3. TEAMS & PLAYER PROFILES VIEW ================= -->
-        <div id="view-teams-profiles" class="view-section space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <!-- SECTION 3: FIXTURES -->
+        <section id="sec-fixtures" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b border-esports-border pb-4 gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
-                        <i class="fa-solid fa-users"></i> Teams and Player Profiles
+                    <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-days"></i> TOURNAMENT FIXTURES
                     </h2>
-                    <p class="text-xs text-slate-400">অনুমোদিত সকল টিমের প্লেয়ারদের তথ্য ও ডিভাইস লিস্ট</p>
+                    <p class="text-sm text-gray-400">12 Match Days Double Round-Robin Schedule & Grand Final</p>
                 </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
             </div>
 
-            <div id="full-teams-profiles-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <p class="text-slate-500 text-sm col-span-full py-8 text-center">টিম প্রোফাইল লোড হচ্ছে...</p>
+            <!-- Match Days List -->
+            <div id="fixturesListContainer" class="space-y-6">
+                <!-- Dynamic Match Days -->
             </div>
-        </div>
+        </section>
 
-        <!-- ================= 4. CAPTAIN LOGIN VIEW ================= -->
-        <div id="view-login-captain" class="view-section max-w-md mx-auto space-y-6 pt-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-                    <h2 class="text-lg font-bold text-slate-100">ক্যাপ্টেন লগইন Portal</h2>
-                    <p class="text-xs text-slate-400">রেজিস্ট্রেশনের সময় ব্যবহৃত Email ও Password দিন</p>
-                </div>
-
-                <form onsubmit="handleCaptainLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">ক্যাপ্টেন ইমেইল (Email)</label>
-                        <input type="email" id="cap-login-email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">পাসওয়ার্ড (Password)</label>
-                        <input type="password" id="cap-login-pass" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                    </div>
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl text-sm transition">
-                        লগইন করুন
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- ================= 5. ADMIN LOGIN VIEW ================= -->
-        <div id="view-login-admin" class="view-section max-w-md mx-auto space-y-6 pt-6">
-            <div class="bg-slate-900 border border-red-900/40 rounded-2xl p-6 shadow-2xl space-y-4">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h2 class="text-lg font-bold text-slate-100">এডমিন প্যানেল লগইন</h2>
-                    <p class="text-xs text-slate-400">শুধুমাত্র টুর্নামেন্ট পরিচালকদের জন্য</p>
-                </div>
-
-                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">এডমিন সিক্রেট পাসওয়ার্ড</label>
-                        <input type="password" id="admin-pass-input" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-red-500" placeholder="Admin Password">
-                    </div>
-                    <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-sm transition">
-                        এডমিন এক্সেস খুলুন
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- ================= 6. SQUAD SUBMIT VIEW ================= -->
-        <div id="view-squad" class="view-section max-w-2xl mx-auto space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-blue-400 flex items-center gap-2">
-                        <i class="fa-solid fa-users-gear"></i> Squad Submit (5vs5 Match Day)
-                    </h2>
-                    <p class="text-xs text-slate-400">আপনার ৬-৮ জন প্লেয়ার থেকে আজকের ৫ জন নির্দিষ্ট প্লেয়ার নির্বাচন করুন</p>
-                </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
-            </div>
-
-            <div id="squad-submission-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-                <p class="text-xs text-amber-400 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
-                    💡 স্কোয়াড জমা দেওয়ার জন্য আগে "ক্যাপ্টেন লগইন" সম্পন্ন করুন।
-                </p>
-            </div>
-        </div>
-
-        <!-- ================= 7. FIXTURE VIEW ================= -->
-        <div id="view-fixture" class="view-section space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-days"></i> টুর্নামেন্ট ফিক্সচার (Tournament Fixtures)
-                    </h2>
-                    <p class="text-xs text-slate-400">১২টি ম্যাচডের সিডিউল ও ৫vs৫ ড্রয়ের তালিকা</p>
-                </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
-            </div>
-
-            <div id="fixtures-display-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <p class="text-slate-500 text-sm col-span-full py-8 text-center">ফিক্সচার ডাটা লোড হচ্ছে...</p>
-            </div>
-        </div>
-
-        <!-- ================= 8. RESULT SUBMIT VIEW ================= -->
-        <div id="view-result" class="view-section max-w-2xl mx-auto space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-purple-400 flex items-center gap-2">
-                        <i class="fa-solid fa-square-poll-vertical"></i> Result Submit & Super Match
-                    </h2>
-                    <p class="text-xs text-slate-400">ম্যাচের পয়েন্ট সাবমিট করুন (২-২ ড্র হলে সুপার ম্যাচ চালু হবে)</p>
-                </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
-            </div>
-
-            <div id="result-submission-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-                <p class="text-xs text-amber-400 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
-                    💡 পয়েন্ট সাবমিট করার জন্য আগে "ক্যাপ্টেন লগইন" সম্পন্ন করুন।
-                </p>
-            </div>
-        </div>
-
-        <!-- ================= 9. POINTS TABLE VIEW (FOOTBALL W/L/WD FORMAT) ================= -->
-        <div id="view-points" class="view-section space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-amber-300 flex items-center gap-2">
-                        <i class="fa-solid fa-ranking-star"></i> লাইভ পয়েন্ট টেবিল (Points Table)
-                    </h2>
-                    <p class="text-xs text-slate-400">ম্যাচ ফলাফল ও উইন ডিফারেন্স (WD) অনুযায়ী পয়েন্ট টেবিল</p>
-                </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-                <table class="w-full text-left text-xs sm:text-sm text-slate-300">
-                    <thead class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
-                        <tr>
-                            <th class="p-3.5 sm:p-4">Rank</th>
-                            <th class="p-3.5 sm:p-4">Team Name</th>
-                            <th class="p-3.5 sm:p-4">Played</th>
-                            <th class="p-3.5 sm:p-4">Wins (W)</th>
-                            <th class="p-3.5 sm:p-4">Losses (L)</th>
-                            <th class="p-3.5 sm:p-4">Diff (WD)</th>
-                            <th class="p-3.5 sm:p-4">Points</th>
-                        </tr>
-                    </thead>
-                    <tbody id="points-table-tbody" class="divide-y divide-slate-800">
-                        <tr>
-                            <td colspan="7" class="p-6 text-center text-slate-500">পয়েন্ট টেবিল লোড হচ্ছে...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ================= 10. RULES VIEW ================= -->
-        <div id="view-rules" class="view-section max-w-3xl mx-auto space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <h2 class="text-xl font-bold text-rose-400 flex items-center gap-2">
-                    <i class="fa-solid fa-book-bookmark"></i> টুর্নামেন্ট নিয়মাবলী (Official Rules)
+        <!-- SECTION 4: RESULT SUBMIT -->
+        <section id="sec-results" class="tab-content hidden space-y-6">
+            <div class="border-b border-esports-border pb-4">
+                <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                    <i class="fa-solid fa-trophy"></i> SUBMIT MATCH RESULTS
                 </h2>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
+                <p class="text-sm text-gray-400">Submit individual player scores and screenshot proofs for completed match days.</p>
             </div>
 
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4 text-slate-300 text-sm leading-relaxed">
-                <h3 class="font-bold text-amber-400 text-base">EPF PAID BID Tournament - 1 নির্দেশিকা:</h3>
-                <ul class="list-disc pl-5 space-y-2 text-slate-300">
-                    <li>প্রতিটি টিমে ৬ থেকে ৮ জন প্লেয়ার নিবন্ধন থাকা বাধ্যতামূলক।</li>
-                    <li>ম্যাচ ডে তে অবশ্যই ৫ জন প্লেয়ার নির্বাচন করে Squad Submit করতে হবে।</li>
-                    <li>কোনো ধরনের থার্ড পার্টি সফটওয়্যার বা অসাধু উপায় অবলম্বন করলে টিম ডিসকোয়ালিফাই হবে।</li>
-                    <li>ম্যাচে ২-২ সমতা হলে চ্যাম্পিয়ন নির্ধারণে সুপার ম্যাচ (Super Match) অনুষ্ঠিত হবে।</li>
-                </ul>
-            </div>
-        </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Result Submission Form -->
+                <div class="lg:col-span-1 bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-gold border-b border-esports-border pb-2">Result Entry Form</h3>
 
-        <!-- ================= 11. AUCTION HIGHLIGHTS GALLERY VIEW ================= -->
-        <div id="view-gallery" class="view-section space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-cyan-400 flex items-center gap-2">
-                        <i class="fa-solid fa-images"></i> Auction Highlights Gallery
+                    <form id="resultSubmitForm" onsubmit="handleResultSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 mb-1">SELECT MATCH DAY</label>
+                            <select id="resultMatchDaySelect" onchange="loadMatchupsForResultForm()" class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-200 focus:border-esports-cyan outline-none" required>
+                                <option value="">-- Choose Match Day --</option>
+                            </select>
+                        </div>
+
+                        <div id="matchupScoresContainer" class="space-y-3 bg-esports-bg p-3 rounded border border-esports-border hidden">
+                            <h4 class="text-xs font-orbitron font-bold text-esports-cyan uppercase">Individual 1v1 Scores</h4>
+                            <div id="scoresInputsList" class="space-y-2">
+                                <!-- JS Injected inputs for 5 matchups -->
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold font-orbitron text-gray-300 mb-1">SCREENSHOT PROOF (URL)</label>
+                            <input type="url" id="resultScreenshotUrl" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-200 focus:border-esports-cyan outline-none" placeholder="https://imgur.com/your-image.png" />
+                        </div>
+
+                        <button type="submit" id="resultSubmitBtn" class="w-full bg-esports-accent hover:bg-pink-600 text-white font-orbitron font-bold py-3 rounded shadow transition">
+                            SUBMIT RESULTS FOR VERIFICATION
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Submitted Results Feed -->
+                <div class="lg:col-span-2 bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-cyan border-b border-esports-border pb-2">Submitted Match Results Feed</h3>
+                    <div id="submittedResultsFeed" class="space-y-4 max-h-[550px] overflow-y-auto custom-scrollbar">
+                        <!-- Dynamic Results -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: POINTS TABLE -->
+        <section id="sec-points" class="tab-content hidden space-y-6">
+            <div class="border-b border-esports-border pb-4">
+                <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                    <i class="fa-solid fa-list-ol"></i> LEAGUE STANDINGS / POINTS TABLE
+                </h2>
+                <p class="text-sm text-gray-400">Real-time standings based on approved match day results.</p>
+            </div>
+
+            <div class="bg-esports-card rounded-xl border border-esports-border overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-esports-bg border-b border-esports-border font-orbitron text-xs text-esports-cyan uppercase tracking-wider">
+                                <th class="p-4 text-center">POS</th>
+                                <th class="p-4">TEAM NAME</th>
+                                <th class="p-4 text-center">CAPTAIN</th>
+                                <th class="p-4 text-center">MP</th>
+                                <th class="p-4 text-center">W</th>
+                                <th class="p-4 text-center">L</th>
+                                <th class="p-4 text-center">D</th>
+                                <th class="p-4 text-center">GD</th>
+                                <th class="p-4 text-center text-esports-gold">PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pointsTableBody" class="divide-y divide-esports-border text-sm font-semibold">
+                            <!-- JS Dynamically Rendered -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: RULES -->
+        <section id="sec-rules" class="tab-content hidden space-y-6">
+            <div class="border-b border-esports-border pb-4">
+                <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                    <i class="fa-solid fa-book"></i> TOURNAMENT RULES & REGULATIONS
+                </h2>
+                <p class="text-sm text-gray-400">Official rules and guidelines for EPF PAID BID TOURNAMENT - 1.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-3">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-gold flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield"></i> 1. Roster & Squad Rules
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-300 text-sm space-y-2">
+                        <li>Each team must register a minimum of 6 and maximum of 8 players.</li>
+                        <li>Player 1 must be designated as the Team Captain.</li>
+                        <li>On each Match Day, Captains must submit a 5v5 starting squad before match start.</li>
+                        <li>Player IDs and device names must match the registered profile exactly.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-3">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-cyan flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad"></i> 2. Match Format & Matchups
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-300 text-sm space-y-2">
+                        <li>Tournament consists of 12 Match Days in a Double Round-Robin format.</li>
+                        <li>Each Match Day features 5 individual 1v1 player matchups between two teams.</li>
+                        <li>Matchups are randomly generated once both team squads are approved by Admin.</li>
+                        <li>The team winning the majority of 1v1 matchups wins the Match Day (3 Points).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-3">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-accent flex items-center gap-2">
+                        <i class="fa-solid fa-bolt"></i> 3. Super Match & Tie-Breaker
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-300 text-sm space-y-2">
+                        <li>If a Match Day score ends in a draw (e.g., 2-2 with a draw matchup), a Super Match is triggered.</li>
+                        <li>Each Captain selects 1 representative player for the Super Match.</li>
+                        <li>The winner of the Super Match claims the 3 points for that Match Day.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-3">
+                    <h3 class="font-orbitron text-lg font-bold text-purple-400 flex items-center gap-2">
+                        <i class="fa-solid fa-crown"></i> 4. Points & Grand Final
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-300 text-sm space-y-2">
+                        <li>Match Day Win = 3 Points, Loss = 0 Points.</li>
+                        <li>Goal Difference (GD) serves as the primary tie-breaker on the Points Table.</li>
+                        <li>Top 2 teams from the Points Table after 12 Match Days advance to the Grand Final.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: HIGHLIGHTS GALLERY -->
+        <section id="sec-gallery" class="tab-content hidden space-y-6">
+            <div class="border-b border-esports-border pb-4">
+                <h2 class="font-orbitron text-2xl font-black text-esports-cyan flex items-center gap-2">
+                    <i class="fa-solid fa-images"></i> AUCTION & TOURNAMENT HIGHLIGHTS
+                </h2>
+                <p class="text-sm text-gray-400">Posters, auction moments, and tournament announcements.</p>
+            </div>
+
+            <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- JS Dynamic Gallery Cards -->
+            </div>
+        </section>
+
+        <!-- SECTION 8: ADMIN PANEL -->
+        <section id="sec-admin" class="tab-content hidden space-y-6">
+            <div class="bg-esports-accent/10 border border-esports-accent p-6 rounded-xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-orbitron text-2xl font-black text-esports-accent flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear"></i> ADMIN CONTROL DASHBOARD
                     </h2>
-                    <p class="text-xs text-slate-400">টুর্নামেন্টের প্লেয়ার বিড ও অকশনের হাইলাইটস পোস্টার</p>
+                    <span class="bg-esports-accent text-white text-xs font-orbitron px-3 py-1 rounded font-bold">ADMIN ACTIVE</span>
                 </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-arrow-left mr-1"></i> ফিরে যান
-                </button>
+                <p class="text-sm text-gray-300">Approve teams, generate fixtures, manage squads, verify results, and post notices.</p>
             </div>
 
-            <div id="gallery-images-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <p class="text-slate-500 text-sm col-span-full py-8 text-center">গ্যালারি ছবি লোড হচ্ছে...</p>
-            </div>
-        </div>
+            <!-- Admin Grid Controls -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <!-- ================= 12. FULL ADMIN PANEL VIEW (WITH PENDING APPROVALS) ================= -->
-        <div id="view-admin" class="view-section space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-xl font-bold text-red-400 flex items-center gap-2">
-                        <i class="fa-solid fa-lock"></i> এডমিন প্যানেল (Full Control)
-                    </h2>
-                    <p class="text-xs text-slate-400">টিম এপ্রুভাল, ফিক্সচার, স্কোয়াড, পেন্ডিং রেজাল্ট এডিটিং ও নোটিশ কন্ট্রোল</p>
-                </div>
-                <button onclick="navigateTo('view-home')" class="text-slate-400 hover:text-slate-200 text-xs bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                    <i class="fa-solid fa-right-from-bracket mr-1"></i> এডমিন লগআউট
-                </button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- 1. Pending Team Registrations Approval -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <h3 class="font-bold text-amber-400 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-user-check"></i> টিম রেজিস্ট্রেশন এপ্রুভাল
+                <!-- 1. Pending Teams Approval -->
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-cyan border-b border-esports-border pb-2 flex items-center justify-between">
+                        <span>1. Pending Team Registrations</span>
+                        <i class="fa-solid fa-user-clock text-xs"></i>
                     </h3>
-                    <div id="admin-pending-teams-list" class="space-y-3">
-                        <p class="text-slate-500 text-xs">কোনো পেন্ডিং টিম নেই।</p>
+                    <div id="adminPendingTeamsList" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar">
+                        <!-- Dynamic Pending Teams -->
                     </div>
                 </div>
 
-                <!-- 2. Fixture Generator & Date Setup -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <h3 class="font-bold text-emerald-400 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-plus"></i> ১২টি ম্যাচডে ফিক্সচার ও তারিখ
+                <!-- 2. Fixture Generator & Schedule Manager -->
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-gold border-b border-esports-border pb-2 flex items-center justify-between">
+                        <span>2. Fixtures Control</span>
+                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
                     </h3>
-                    <p class="text-xs text-slate-400">৪টি টিম এপ্রুভ হলে ফিক্সচার জেনারেট করুন:</p>
-                    <button onclick="generate12Fixtures()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition w-full">
-                        ১২ ম্যাচ ফিক্সচার জেনারেট করুন
-                    </button>
-                    <div id="admin-fixture-dates-box" class="pt-2 border-t border-slate-800 space-y-2 max-h-48 overflow-y-auto">
-                        <p class="text-slate-500 text-xs">ফিক্সচার তৈরি হলে তারিখ সেট করার ঘর আসবে।</p>
+                    <div class="space-y-3">
+                        <p class="text-xs text-gray-400">Generate 12 Match Days Double Round-Robin schedule once 4 teams are approved.</p>
+                        <button onclick="adminGenerateFixtures()" class="w-full bg-gradient-to-r from-esports-gold to-yellow-600 hover:from-yellow-600 hover:to-esports-gold text-black font-orbitron font-bold py-3 rounded shadow transition">
+                            <i class="fa-solid fa-bolt mr-2"></i> GENERATE 12 MATCH DAYS FIXTURES
+                        </button>
                     </div>
                 </div>
 
-                <!-- 3. Pending Squad Submission Approvals -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                    <h3 class="font-bold text-blue-400 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-users-viewfinder"></i> স্কোয়াড সাবমিশন এপ্রুভাল (Pending)
+                <!-- 3. Pending Squads Verification -->
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-cyan border-b border-esports-border pb-2">
+                        3. Pending Squad Approvals & Random 5v5 Generator
                     </h3>
-                    <div id="admin-squad-approval-list" class="space-y-3">
-                        <p class="text-slate-500 text-xs">কোনো স্কোয়াড জমা নেই।</p>
+                    <div id="adminPendingSquadsList" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar">
+                        <!-- Dynamic Pending Squads -->
                     </div>
                 </div>
 
-                <!-- 4. Pending Result Submission Approval & Edit -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl md:col-span-2 lg:col-span-2">
-                    <h3 class="font-bold text-purple-400 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square"></i> রেজাল্ট সাবমিশন এপ্রুভ ও এডিট (Wins & Losses)
+                <!-- 4. Pending Results Approval -->
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-accent border-b border-esports-border pb-2">
+                        4. Result Verification & Score Approval
                     </h3>
-                    <p class="text-xs text-slate-400">ক্যাপ্টেনদের জমা দেওয়া রেজাল্ট চেক করে উইন/লস এডিট করে এপ্রুভ দিন:</p>
-                    <div id="admin-result-approval-list" class="space-y-3">
-                        <p class="text-slate-500 text-xs">কোনো পেন্ডিং রেজাল্ট জমা পাওয়া যায়নি।</p>
+                    <div id="adminPendingResultsList" class="space-y-3 max-h-60 overflow-y-auto custom-scrollbar">
+                        <!-- Dynamic Pending Results -->
                     </div>
                 </div>
 
                 <!-- 5. Notice Board Manager -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
-                    <h3 class="font-bold text-cyan-400 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-bullhorn"></i> নোটিশ পোস্ট করুন
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-cyan border-b border-esports-border pb-2">
+                        5. Update Official Notice
                     </h3>
-                    <input type="text" id="admin-new-notice-input" placeholder="নোটিশের লেখা দিন" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
-                    <button onclick="saveNoticeToSupabase()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs w-full">পাবলিশ করুন</button>
+                    <form onsubmit="handleAdminNoticeUpdate(event)" class="space-y-3">
+                        <textarea id="adminNoticeInput" rows="3" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-200 focus:border-esports-cyan outline-none" placeholder="Enter notice text..."></textarea>
+                        <button type="submit" class="bg-esports-cyan hover:bg-cyan-400 text-black font-orbitron font-bold px-4 py-2 rounded text-xs transition">
+                            UPDATE NOTICE
+                        </button>
+                    </form>
                 </div>
 
-                <!-- 6. Auction Highlights Manager -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
-                    <h3 class="font-bold text-rose-400 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-image"></i> গ্যালারিতে ছবি যোগ করুন
+                <!-- 6. Highlights Gallery Uploader -->
+                <div class="bg-esports-card p-6 rounded-xl border border-esports-border space-y-4">
+                    <h3 class="font-orbitron text-lg font-bold text-esports-gold border-b border-esports-border pb-2">
+                        6. Upload Gallery Poster
                     </h3>
-                    <input type="text" id="admin-img-url" placeholder="ইমেজ URL (Direct Link)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
-                    <input type="text" id="admin-img-cap" placeholder="ক্যাপশন (উদা: Highest Bid)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-200">
-                    <button onclick="saveGalleryToSupabase()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-4 py-2 rounded-xl text-xs w-full">ছবি আপলোড করুন</button>
+                    <form onsubmit="handleAdminHighlightUpload(event)" class="space-y-3">
+                        <input type="text" id="adminHighlightTitle" placeholder="Poster Title / Description" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-200 focus:border-esports-cyan outline-none" />
+                        <input type="url" id="adminHighlightUrl" placeholder="Image URL (https://...)" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-200 focus:border-esports-cyan outline-none" />
+                        <button type="submit" class="bg-esports-gold hover:bg-yellow-500 text-black font-orbitron font-bold px-4 py-2 rounded text-xs transition">
+                            UPLOAD TO GALLERY
+                        </button>
+                    </form>
                 </div>
+
             </div>
-        </div>
+        </section>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-slate-950 border-t border-slate-900 py-6 text-center text-xs text-slate-600">
-        <p>© 2026 EPF PAID BID Tournament - 1. All rights reserved.</p>
+    <footer class="bg-esports-card border-t border-esports-border py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+            <p>&copy; 2026 EPF PAID BID TOURNAMENT - 1. All Rights Reserved.</p>
+            <div class="flex space-x-4">
+                <a href="#" onclick="switchTab('rules')" class="hover:text-esports-cyan transition">Rules</a>
+                <span>|</span>
+                <a href="#" onclick="openModal('adminLoginModal')" class="hover:text-esports-accent transition">Admin Access</a>
+            </div>
+        </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC & SUPABASE INTEGRATION -->
+    <!-- MODAL 1: SIGN UP TEAM -->
+    <div id="signupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-esports-card border border-esports-cyan/40 rounded-xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="font-orbitron text-xl font-black text-esports-cyan flex items-center gap-2">
+                <i class="fa-solid fa-user-plus"></i> REGISTER NEW TEAM
+            </h3>
+            
+            <form onsubmit="handleTeamSignUp(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">TEAM NAME (BOLD)</label>
+                        <input type="text" id="regTeamName" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 font-bold uppercase focus:border-esports-cyan outline-none" placeholder="e.g. VIPER ESPORTS" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">CAPTAIN NAME</label>
+                        <input type="text" id="regCaptainName" oninput="syncCaptainPlayerName()" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 focus:border-esports-cyan outline-none" placeholder="Captain Full Name" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">CAPTAIN EMAIL (LOGIN ID)</label>
+                        <input type="email" id="regCaptainEmail" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 focus:border-esports-cyan outline-none" placeholder="captain@domain.com" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">PASSWORD</label>
+                        <input type="password" id="regCaptainPassword" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 focus:border-esports-cyan outline-none" placeholder="••••••••" />
+                    </div>
+                </div>
+
+                <!-- Roster Section (Min 6, Max 8 Players) -->
+                <div class="space-y-3 pt-2 border-t border-esports-border">
+                    <h4 class="font-orbitron text-sm font-bold text-esports-gold flex items-center justify-between">
+                        <span>PLAYER ROSTER (MIN 6, MAX 8 PLAYERS)</span>
+                    </h4>
+
+                    <div id="rosterInputsContainer" class="space-y-3">
+                        <!-- Player 1 (Captain Auto-fill) -->
+                        <div class="bg-esports-bg p-3 rounded border border-esports-cyan/30 space-y-2">
+                            <span class="text-xs font-orbitron font-bold text-esports-cyan">PLAYER 1 (CAPTAIN)</span>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <input type="text" id="p1_name" readonly class="bg-esports-card border border-esports-border rounded p-2 text-xs text-gray-300 font-bold" placeholder="Captain Name" />
+                                <input type="text" id="p1_uid" required class="bg-esports-card border border-esports-border rounded p-2 text-xs text-gray-100 focus:border-esports-cyan outline-none" placeholder="In-Game UID" />
+                                <input type="text" id="p1_device" required class="bg-esports-card border border-esports-border rounded p-2 text-xs text-gray-100 focus:border-esports-cyan outline-none" placeholder="Device Name" />
+                            </div>
+                        </div>
+
+                        <!-- Players 2 to 6 Required -->
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-esports-accent to-red-600 text-white font-orbitron font-bold py-3 rounded shadow-lg hover:brightness-110 transition">
+                    SUBMIT TEAM REGISTRATION
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CAPTAIN LOGIN -->
+    <div id="captainLoginModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-esports-card border border-esports-cyan/40 rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('captainLoginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="font-orbitron text-xl font-black text-esports-cyan flex items-center gap-2">
+                <i class="fa-solid fa-user-shield"></i> CAPTAIN LOGIN
+            </h3>
+            
+            <form onsubmit="handleCaptainLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">CAPTAIN EMAIL</label>
+                    <input type="email" id="loginCaptainEmail" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 focus:border-esports-cyan outline-none" placeholder="captain@domain.com" />
+                </div>
+                <div>
+                    <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">PASSWORD</label>
+                    <input type="password" id="loginCaptainPassword" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 focus:border-esports-cyan outline-none" placeholder="••••••••" />
+                </div>
+                <button type="submit" class="w-full bg-esports-cyan hover:bg-cyan-400 text-black font-orbitron font-bold py-3 rounded shadow transition">
+                    LOG IN
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADMIN LOGIN -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-esports-card border border-esports-accent/40 rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeModal('adminLoginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="font-orbitron text-xl font-black text-esports-accent flex items-center gap-2">
+                <i class="fa-solid fa-lock"></i> ADMIN ACCESS
+            </h3>
+            
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-orbitron font-bold text-gray-300 mb-1">ADMIN PASSWORD</label>
+                    <input type="password" id="loginAdminPassword" required class="w-full bg-esports-bg border border-esports-border rounded p-2.5 text-sm text-gray-100 focus:border-esports-accent outline-none" placeholder="Enter Admin Key" />
+                </div>
+                <button type="submit" class="w-full bg-esports-accent hover:bg-pink-600 text-white font-orbitron font-bold py-3 rounded shadow transition">
+                    VERIFY & ACCESS ADMIN PANEL
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // ================= SUPABASE CONFIGURATION =================
-     // Supabase Configuration
-const SUPABASE_URL = 'https://bdufskqhssmgbhyxtnmi.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_G8IE_FFpezE2MuujsiVxEg_A65_YJHx';
+        /* ==========================================================================
+           SUPABASE CONFIGURATION & INITIALIZATION
+           ========================================================================== */
+        const SUPABASE_URL = "https://bdufskqhssmgbhyxtnmi.supabase.co/rest/v1/";
+        const SUPABASE_ANON_KEY = "sb_publishable_G8IE_FFpezE2MuujsiVxEg_A65_YJHx";
+        
+        let db = null;
+        if (SUPABASE_URL !== "YOUR_SUPABASE_URL_HERE") {
+            db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
 
-// সরাসরি ক্লায়েন্ট তৈরি করুন (কোনো if কন্ডিশন ছাড়া)
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        /* App State */
+        let currentUserRole = null; // 'admin' or 'captain'
+        let currentCaptainTeam = null; // Team object if captain logged in
+        let globalTeams = [];
+        let globalFixtures = [];
+        let globalSquads = [];
+        let globalResults = [];
 
-      let currentCaptainTeam = JSON.parse(localStorage.getItem('currentCaptain')) || null;
+        /* ==========================================================================
+           INITIALIZATION & DOM LOAD
+           ========================================================================== */
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderRosterInputs();
+            checkSavedSession();
+            await refreshAllData();
+            switchTab('teams');
+        });
 
-        // ================= VIEW SWITCHER (STRICT ISOLATED VIEWS) =================
-function navigateTo(viewId) {
-    checkCaptainSession(); // সেশন ধরে রাখবে
+        async function refreshAllData() {
+            if (!db) {
+                console.warn("Supabase credentials not configured yet.");
+                renderDummyNotice();
+                return;
+            }
+            await Promise.all([
+                fetchNotice(),
+                fetchTeams(),
+                fetchFixtures(),
+                fetchSquads(),
+                fetchResults(),
+                fetchHighlights()
+            ]);
+        }
 
-    const views = document.querySelectorAll('.view-section');
-    views.forEach(v => v.classList.remove('active'));
+        /* ==========================================================================
+           UI NAVIGATION & TABS
+           ========================================================================== */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-esports-cyan/20', 'text-esports-cyan', 'border-esports-cyan');
+                btn.classList.add('text-gray-400');
+            });
 
-    const target = document.getElementById(viewId);
-    if (target) {
-        target.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+            const activeContent = document.getElementById(`sec-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
 
-        if (viewId === 'view-home') loadNotice(), loadHomeTeams();
-        if (viewId === 'view-teams-profiles') loadFullTeamsAndProfiles();
-        if (viewId === 'view-fixture') loadFixturesList();
-        if (viewId === 'view-points') loadPointsTable();
-        if (viewId === 'view-gallery') loadGalleryGrid();
-        if (viewId === 'view-admin') loadAdminDashboard();
-        if (viewId === 'view-squad') renderSquadSubmitView();
-    }
-}
-        // Generate Player Input Fields (6 to 8)
-        function renderPlayerRegistrationFields() {
-            const container = document.getElementById('players-fields-container');
-            container.innerHTML = '';
-
-            for (let i = 1; i <= 8; i++) {
-                const isMandatory = i <= 6;
-                const reqText = isMandatory ? '<span class="text-red-400">*</span>' : '(Optional)';
-
-                const div = document.createElement('div');
-                div.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2";
-                div.innerHTML = `
-                    <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">
-                        Player ${i} ${i === 1 ? '(Captain)' : ''} ${reqText}
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <input type="text" id="p-name-${i}" ${i === 1 ? 'readonly' : ''} ${isMandatory ? 'required' : ''} class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200" placeholder="Player Name">
-                        <input type="text" id="p-uid-${i}" ${isMandatory ? 'required' : ''} class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200" placeholder="In-Game UID">
-                        <input type="text" id="p-device-${i}" ${isMandatory ? 'required' : ''} class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200" placeholder="Device (e.g. Mobile)">
-                    </div>
-                `;
-                container.appendChild(div);
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-gray-400');
+                activeBtn.classList.add('bg-esports-cyan/20', 'text-esports-cyan', 'border-esports-cyan');
             }
         }
-        renderPlayerRegistrationFields();
 
-        function syncCaptainNameToPlayer1() {
-            const cap = document.getElementById('reg-captain-name').value;
-            const p1 = document.getElementById('p-name-1');
-            if (p1) p1.value = cap;
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
         }
 
-        // Submit Team Registration
-        async function handleRegistrationSubmit(e) {
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        /* ==========================================================================
+           ROSTER FORM GENERATOR (MIN 6, MAX 8 PLAYERS)
+           ========================================================================== */
+        function renderRosterInputs() {
+            const container = document.getElementById('rosterInputsContainer');
+            // Keep player 1
+            let html = container.children[0].outerHTML;
+
+            for (let i = 2; i <= 8; i++) {
+                const isRequired = i <= 6;
+                html += `
+                    <div class="bg-esports-bg p-3 rounded border border-esports-border space-y-2">
+                        <span class="text-xs font-orbitron font-bold text-gray-400">PLAYER ${i} ${isRequired ? '<span class="text-red-500">*</span>' : '(OPTIONAL)'}</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input type="text" id="p${i}_name" ${isRequired ? 'required' : ''} class="bg-esports-card border border-esports-border rounded p-2 text-xs text-gray-100 focus:border-esports-cyan outline-none" placeholder="Player Name" />
+                            <input type="text" id="p${i}_uid" ${isRequired ? 'required' : ''} class="bg-esports-card border border-esports-border rounded p-2 text-xs text-gray-100 focus:border-esports-cyan outline-none" placeholder="In-Game UID" />
+                            <input type="text" id="p${i}_device" ${isRequired ? 'required' : ''} class="bg-esports-card border border-esports-border rounded p-2 text-xs text-gray-100 focus:border-esports-cyan outline-none" placeholder="Device Name" />
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function syncCaptainPlayerName() {
+            const captainName = document.getElementById('regCaptainName').value;
+            const p1Name = document.getElementById('p1_name');
+            if (p1Name) p1Name.value = captainName;
+        }
+
+        /* ==========================================================================
+           AUTHENTICATION LOGIC
+           ========================================================================== */
+        async function handleTeamSignUp(e) {
             e.preventDefault();
-            
+            if (!db) return alert("Please configure Supabase API credentials first!");
 
-            const teamName = document.getElementById('reg-team-name').value.toUpperCase().trim();
-            const captainName = document.getElementById('reg-captain-name').value.trim();
-            const email = document.getElementById('reg-captain-email').value.trim();
-            const password = document.getElementById('reg-captain-pass').value.trim();
+            const team_name = document.getElementById('regTeamName').value.trim();
+            const captain_name = document.getElementById('regCaptainName').value.trim();
+            const email = document.getElementById('regCaptainEmail').value.trim();
+            const password = document.getElementById('regCaptainPassword').value;
 
-            const { data: teamData, error: teamErr } = await sb.from('teams').insert([{
-                team_name: teamName,
-                captain_name: captainName,
-                email: email,
-                password: password,
-                status: 'pending'
-            }]).select();
-
-            if (teamErr) return alert("রেজিস্ট্রেশন ত্রুটি: " + teamErr.message);
-
-            const newTeamId = teamData[0].id;
-            const playersList = [];
-
+            // Build Roster
+            const roster = [];
             for (let i = 1; i <= 8; i++) {
-                const name = document.getElementById(`p-name-${i}`).value.trim();
-                const uid = document.getElementById(`p-uid-${i}`).value.trim();
-                const device = document.getElementById(`p-device-${i}`).value.trim();
+                const name = document.getElementById(`p${i}_name`)?.value.trim();
+                const uid = document.getElementById(`p${i}_uid`)?.value.trim();
+                const device = document.getElementById(`p${i}_device`)?.value.trim();
 
                 if (name && uid && device) {
-                    playersList.push({
-                        team_id: newTeamId,
+                    roster.push({
                         player_number: i,
-                        name: name,
-                        uid: uid,
-                        device: device,
-                        is_captain: i === 1
+                        is_captain: i === 1,
+                        name,
+                        uid,
+                        device
                     });
                 }
             }
 
-            const { error: playErr } = await sb.from('players').insert(playersList);
-            if (playErr) return alert("প্লেয়ার ডাটা সেভ করতে সমস্যা: " + playErr.message);
+            if (roster.length < 6) {
+                return alert("You must register at least 6 players!");
+            }
 
-            alert("টিম রেজিস্ট্রেশন সফল হয়েছে! এডমিন এপ্রুভালের জন্য অপেক্ষা করুন।");
-            document.getElementById('form-team-register').reset();
-            navigateTo('view-home');
+            const { data, error } = await db.from('teams').insert([
+                { team_name, captain_name, email, password, roster, status: 'pending' }
+            ]);
+
+            if (error) {
+                alert("Sign up failed: " + error.message);
+            } else {
+                alert("Team Registered Successfully! Awaiting Admin Approval.");
+                closeModal('signupModal');
+                refreshAllData();
+            }
         }
 
-// Captain Login Function
-async function handleCaptainLogin(e) {
-    e.preventDefault();
-    if (!sb) return alert("সুপাবেজ কী সেট করা নেই!");
+        async function handleCaptainLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginCaptainEmail').value.trim();
+            const password = document.getElementById('loginCaptainPassword').value;
 
-    const email = document.getElementById('cap-login-email').value.trim();
-    const pass = document.getElementById('cap-login-pass').value.trim();
+            if (!db) return alert("Supabase not configured!");
 
-    const { data, error } = await sb.from('teams').select('*').eq('email', email).eq('password', pass).single();
+            const { data, error } = await db.from('teams').select('*').eq('email', email).eq('password', password).single();
 
-    if (error || !data) {
-        alert("ভুল ইমেইল অথবা পাসওয়ার্ড!");
-    } else {
-        currentCaptainTeam = data;
-        localStorage.setItem('currentCaptain', JSON.stringify(data));
-        alert(`স্বাগতম ক্যাপ্টেন ${data.captain_name} (${data.team_name})!`);
-        
-        navigateTo('view-squad');
-    }
-}
+            if (error || !data) {
+                alert("Invalid Email or Password!");
+            } else if (data.status !== 'approved') {
+                alert("Your team registration is still PENDING admin approval!");
+            } else {
+                currentUserRole = 'captain';
+                currentCaptainTeam = data;
+                localStorage.setItem('epf_session', JSON.stringify({ role: 'captain', team: data }));
+                updateSessionUI();
+                closeModal('captainLoginModal');
+                alert(`Welcome Captain ${data.captain_name} (${data.team_name})!`);
+                switchTab('squad');
+            }
+        }
 
-        // Admin Login
         function handleAdminLogin(e) {
             e.preventDefault();
-            const pass = document.getElementById('admin-pass-input').value;
-            if (pass === 'admin123') {
-                alert("এডমিন লগইন সফল হয়েছে!");
-                navigateTo('view-admin');
+            const pass = document.getElementById('loginAdminPassword').value;
+            if (pass === 'admin123') { // Admin Key
+                currentUserRole = 'admin';
+                localStorage.setItem('epf_session', JSON.stringify({ role: 'admin' }));
+                updateSessionUI();
+                closeModal('adminLoginModal');
+                switchTab('admin');
+                alert("Admin Access Granted!");
             } else {
-                alert("ভুল এডমিন পাসওয়ার্ড!");
+                alert("Incorrect Admin Password!");
             }
         }
 
-        // Fetch Notices
-        async function loadNotice() {
-            if (!sb) return;
-            const { data } = await sb.from('notices').select('*').order('created_at', { ascending: false }).limit(1);
-            if (data && data.length > 0) {
-                document.getElementById('notice-board-text').innerText = data[0].content;
+        function checkSavedSession() {
+            const saved = localStorage.getItem('epf_session');
+            if (saved) {
+                const session = JSON.parse(saved);
+                currentUserRole = session.role;
+                if (session.team) currentCaptainTeam = session.team;
+                updateSessionUI();
             }
         }
 
-        async function saveNoticeToSupabase() {
-            if (!sb) return;
-            const txt = document.getElementById('admin-new-notice-input').value;
-            if (!txt) return;
-            await sb.from('notices').insert([{ content: txt }]);
-            alert("নোটিশ আপডেট হয়েছে!");
-            loadNotice();
+        function updateSessionUI() {
+            const badge = document.getElementById('userSessionBadge');
+            const title = document.getElementById('sessionUserTitle');
+            const adminTab = document.getElementById('adminTabBtn');
+
+            if (currentUserRole === 'admin') {
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+                title.innerText = "ADMIN";
+                adminTab.classList.remove('hidden');
+                adminTab.classList.add('flex');
+            } else if (currentUserRole === 'captain' && currentCaptainTeam) {
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+                title.innerText = `CAPTAIN (${currentCaptainTeam.team_name})`;
+                adminTab.classList.add('hidden');
+                
+                // Populate Squad Form Info
+                document.getElementById('squadTeamNameInput').value = currentCaptainTeam.team_name;
+                renderCaptainRosterCheckboxes();
+            } else {
+                badge.classList.add('hidden');
+                adminTab.classList.add('hidden');
+            }
         }
 
-        // Load Approved Teams
-        async function loadFullTeamsAndProfiles() {
-            if (!sb) return;
-            const container = document.getElementById('full-teams-profiles-container');
-            container.innerHTML = '<p class="text-slate-500 text-sm col-span-full">লোড হচ্ছে...</p>';
+        function logout() {
+            currentUserRole = null;
+            currentCaptainTeam = null;
+            localStorage.removeItem('epf_session');
+            updateSessionUI();
+            alert("Logged Out Successfully.");
+            switchTab('teams');
+        }
 
-            const { data: teams } = await sb.from('teams').select('*, players(*)').eq('status', 'approved');
+        /* ==========================================================================
+           DATA FETCHING & RENDER ENGINES
+           ========================================================================== */
+        async function fetchNotice() {
+            const { data } = await db.from('notice').select('*').eq('id', 1).single();
+            if (data) {
+                document.getElementById('noticeTickerText').innerText = data.content;
+            }
+        }
 
-            if (!teams || teams.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 text-sm col-span-full py-6 text-center">কোনো অনুমোদিত টিম এখনো পাওয়া যায়নি।</p>';
+        async function fetchTeams() {
+            const { data } = await db.from('teams').select('*').order('id', { ascending: true });
+            globalTeams = data || [];
+            
+            const approved = globalTeams.filter(t => t.status === 'approved');
+            document.getElementById('approvedTeamsCount').innerText = approved.length;
+
+            renderTeamsSection(approved);
+            renderAdminPendingTeams(globalTeams.filter(t => t.status === 'pending'));
+        }
+
+        function renderTeamsSection(teams) {
+            const container = document.getElementById('teamsContainer');
+            if (teams.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 bg-esports-card rounded-xl text-gray-400 font-orbitron">No approved teams yet.</div>`;
                 return;
             }
 
-            container.innerHTML = '';
-            teams.forEach(t => {
-                let playersHtml = t.players.map(p => `
-                    <tr class="border-b border-slate-800/50">
-                        <td class="p-2 text-slate-300">${p.name} ${p.is_captain ? '👑' : ''}</td>
-                        <td class="p-2 text-amber-400 font-mono">${p.uid}</td>
-                        <td class="p-2 text-slate-400">${p.device}</td>
-                    </tr>
-                `).join('');
-
-                container.innerHTML += `
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3">
-                        <div class="border-b border-slate-800 pb-3">
-                            <h3 class="text-lg font-black text-amber-400 uppercase tracking-wide">${t.team_name}</h3>
-                            <p class="text-xs text-slate-400">ক্যাপ্টেন: ${t.captain_name}</p>
+            container.innerHTML = teams.map(team => `
+                <div class="bg-esports-card rounded-xl border border-esports-border p-5 space-y-4 shadow-xl">
+                    <div class="flex items-center justify-between border-b border-esports-border pb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-esports-cyan/10 border border-esports-cyan rounded-lg flex items-center justify-center font-orbitron font-black text-esports-cyan">
+                                ${team.team_name.substring(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                                <h3 class="font-orbitron text-lg font-black text-white">${team.team_name}</h3>
+                                <p class="text-xs text-esports-gold font-bold">Captain: ${team.captain_name}</p>
+                            </div>
                         </div>
-                        <table class="w-full text-left text-xs">
-                            <thead class="text-slate-500 uppercase text-[10px]">
-                                <tr><th class="p-2">Player</th><th class="p-2">UID</th><th class="p-2">Device</th></tr>
-                            </thead>
-                            <tbody>${playersHtml}</tbody>
-                        </table>
+                        <span class="bg-green-500/10 border border-green-500 text-green-400 text-[10px] font-orbitron px-2.5 py-1 rounded">APPROVED</span>
+                    </div>
+
+                    <!-- Roster Table -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-orbitron font-bold text-gray-400 uppercase">Team Roster (${team.roster.length} Players)</h4>
+                        <div class="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto custom-scrollbar">
+                            ${team.roster.map(p => `
+                                <div class="bg-esports-bg p-2 rounded flex items-center justify-between text-xs">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-bold text-esports-cyan">#${p.player_number}</span>
+                                        <span class="font-semibold text-gray-200">${p.name} ${p.is_captain ? '<i class="fa-solid fa-crown text-esports-gold ml-1" title="Captain"></i>' : ''}</span>
+                                    </div>
+                                    <div class="text-right text-[11px] text-gray-400">
+                                        <span class="block">UID: ${p.uid}</span>
+                                        <span class="block text-gray-500">${p.device}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function fetchFixtures() {
+            const { data } = await db.from('fixtures').select('*').order('id', { ascending: true });
+            globalFixtures = data || [];
+            renderFixturesSection();
+            populateMatchDayDropdowns();
+        }
+
+        function renderFixturesSection() {
+            const container = document.getElementById('fixturesListContainer');
+            if (globalFixtures.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 bg-esports-card rounded-xl text-gray-400 font-orbitron">Fixtures have not been generated by Admin yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = globalFixtures.map(f => {
+                const matchups = f.matchups || [];
+                return `
+                    <div class="bg-esports-card rounded-xl border border-esports-border p-5 space-y-4 shadow-xl">
+                        <div class="flex flex-wrap items-center justify-between border-b border-esports-border pb-3 gap-2">
+                            <div class="flex items-center space-x-3">
+                                <span class="bg-esports-cyan/20 border border-esports-cyan text-esports-cyan font-orbitron font-bold text-xs px-3 py-1 rounded">
+                                    ${f.match_day}
+                                </span>
+                                <span class="text-xs text-gray-400 font-semibold"><i class="fa-regular fa-calendar mr-1"></i> ${f.match_date || 'Date TBD'}</span>
+                            </div>
+                            <span class="text-xs font-orbitron font-bold uppercase ${f.status === 'completed' ? 'text-green-400' : 'text-esports-gold'}">
+                                Status: ${f.status}
+                            </span>
+                        </div>
+
+                        <!-- Team vs Team Banner -->
+                        <div class="flex items-center justify-between bg-esports-bg p-4 rounded-lg border border-esports-border">
+                            <div class="text-center w-2/5">
+                                <h3 class="font-orbitron font-black text-base sm:text-xl text-white">${f.team1}</h3>
+                            </div>
+                            <div class="text-center w-1/5">
+                                <span class="font-orbitron text-xl sm:text-2xl font-black text-esports-accent">
+                                    ${f.status === 'completed' ? `${f.team1_score} - ${f.team2_score}` : 'VS'}
+                                </span>
+                            </div>
+                            <div class="text-center w-2/5">
+                                <h3 class="font-orbitron font-black text-base sm:text-xl text-white">${f.team2}</h3>
+                            </div>
+                        </div>
+
+                        <!-- 5v5 Player Matchups (If Generated) -->
+                        ${matchups.length > 0 ? `
+                            <div class="space-y-2 pt-2">
+                                <h4 class="text-xs font-orbitron font-bold text-esports-cyan uppercase">Approved 5v5 Player Matchups</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    ${matchups.map((m, idx) => `
+                                        <div class="bg-esports-bg p-2.5 rounded border border-esports-border flex items-center justify-between text-xs">
+                                            <span class="font-bold text-gray-300">Match ${idx + 1}:</span>
+                                            <span class="text-esports-cyan font-semibold">${m.p1}</span>
+                                            <span class="text-gray-500 font-bold">vs</span>
+                                            <span class="text-esports-gold font-semibold">${m.p2}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : '<p class="text-xs text-gray-500 italic text-center">5v5 Player Matchups will appear once both teams submit squads and Admin approves.</p>'}
                     </div>
                 `;
+            }).join('');
+        }
+
+        function populateMatchDayDropdowns() {
+            const squadSelect = document.getElementById('squadMatchDaySelect');
+            const resultSelect = document.getElementById('resultMatchDaySelect');
+
+            const options = globalFixtures.map(f => `<option value="${f.match_day}">${f.match_day}: ${f.team1} vs ${f.team2}</option>`).join('');
+            
+            squadSelect.innerHTML = `<option value="">-- Choose Scheduled Match Day --</option>` + options;
+            resultSelect.innerHTML = `<option value="">-- Choose Match Day --</option>` + options;
+        }
+
+        /* ==========================================================================
+           SQUAD SUBMISSION LOGIC
+           ========================================================================== */
+        function renderCaptainRosterCheckboxes() {
+            const container = document.getElementById('squadPlayerCheckboxes');
+            if (!currentCaptainTeam) return;
+
+            container.innerHTML = currentCaptainTeam.roster.map(p => `
+                <label class="flex items-center space-x-3 p-2 bg-esports-card rounded border border-esports-border cursor-pointer hover:border-esports-cyan transition">
+                    <input type="checkbox" value="${p.name}" onchange="handleSquadCheckboxChange()" class="squad-checkbox w-4 h-4 text-esports-cyan bg-esports-bg border-esports-border rounded focus:ring-0">
+                    <span class="text-xs text-gray-200 font-semibold">${p.name} (${p.uid})</span>
+                </label>
+            `).join('');
+        }
+
+        function handleSquadCheckboxChange() {
+            const checkboxes = document.querySelectorAll('.squad-checkbox:checked');
+            document.getElementById('squadSelectedCount').innerText = checkboxes.length;
+            
+            const btn = document.getElementById('squadSubmitBtn');
+            if (checkboxes.length === 5) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        async function handleSquadSubmit(e) {
+            e.preventDefault();
+            if (!currentCaptainTeam) return alert("Captain Login Required!");
+
+            const match_day = document.getElementById('squadMatchDaySelect').value;
+            const selectedBoxes = document.querySelectorAll('.squad-checkbox:checked');
+            const selected_players = Array.from(selectedBoxes).map(cb => cb.value);
+
+            if (selected_players.length !== 5) return alert("Select exactly 5 players!");
+
+            const { data, error } = await db.from('squads').insert([
+                { match_day, team_id: currentCaptainTeam.id, team_name: currentCaptainTeam.team_name, selected_players, status: 'pending' }
+            ]);
+
+            if (error) alert("Submission failed: " + error.message);
+            else {
+                alert("5v5 Squad Submitted for Admin Approval!");
+                refreshAllData();
+            }
+        }
+
+        async function fetchSquads() {
+            const { data } = await db.from('squads').select('*').order('id', { ascending: false });
+            globalSquads = data || [];
+            
+            // Render user feed
+            const container = document.getElementById('submittedSquadsList');
+            container.innerHTML = globalSquads.map(s => `
+                <div class="bg-esports-bg p-4 rounded-lg border border-esports-border space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-orbitron font-bold text-esports-cyan">${s.match_day} - ${s.team_name}</span>
+                        <span class="font-bold ${s.status === 'approved' ? 'text-green-400' : 'text-esports-gold'}">${s.status.toUpperCase()}</span>
+                    </div>
+                    <p class="text-xs text-gray-300">Players: ${s.selected_players.join(', ')}</p>
+                </div>
+            `).join('');
+
+            renderAdminPendingSquads(globalSquads.filter(s => s.status === 'pending'));
+        }
+
+        /* ==========================================================================
+           RESULT SUBMISSION LOGIC
+           ========================================================================== */
+        function loadMatchupsForResultForm() {
+            const matchDay = document.getElementById('resultMatchDaySelect').value;
+            const fixture = globalFixtures.find(f => f.match_day === matchDay);
+            const container = document.getElementById('matchupScoresContainer');
+            const list = document.getElementById('scoresInputsList');
+
+            if (!fixture || !fixture.matchups || fixture.matchups.length === 0) {
+                container.classList.add('hidden');
+                return alert("Approved 5v5 player matchups do not exist for this match day yet!");
+            }
+
+            container.classList.remove('hidden');
+            list.innerHTML = fixture.matchups.map((m, idx) => `
+                <div class="bg-esports-card p-2 rounded border border-esports-border flex items-center justify-between text-xs gap-2">
+                    <span class="font-bold text-gray-300 truncate w-1/3">${m.p1}</span>
+                    <input type="number" min="0" id="score_p1_${idx}" required class="w-12 bg-esports-bg border border-esports-border text-center rounded p-1 text-white font-bold" placeholder="0" />
+                    <span class="text-gray-500 font-bold">-</span>
+                    <input type="number" min="0" id="score_p2_${idx}" required class="w-12 bg-esports-bg border border-esports-border text-center rounded p-1 text-white font-bold" placeholder="0" />
+                    <span class="font-bold text-gray-300 truncate w-1/3 text-right">${m.p2}</span>
+                </div>
+            `).join('');
+        }
+
+        async function handleResultSubmit(e) {
+            e.preventDefault();
+            if (!currentCaptainTeam) return alert("Captain Login Required!");
+
+            const match_day = document.getElementById('resultMatchDaySelect').value;
+            const screenshot_url = document.getElementById('resultScreenshotUrl').value.trim();
+            const fixture = globalFixtures.find(f => f.match_day === matchDay);
+
+            const scores = [];
+            for (let i = 0; i < 5; i++) {
+                const s1 = parseInt(document.getElementById(`score_p1_${i}`).value) || 0;
+                const s2 = parseInt(document.getElementById(`score_p2_${i}`).value) || 0;
+                scores.push({ matchup_index: i, score1: s1, score2: s2 });
+            }
+
+            const { data, error } = await db.from('results').insert([
+                { match_day, team_id: currentCaptainTeam.id, team_name: currentCaptainTeam.team_name, scores, screenshot_url, status: 'pending' }
+            ]);
+
+            if (error) alert("Result submission failed: " + error.message);
+            else {
+                alert("Match Result Submitted for Verification!");
+                refreshAllData();
+            }
+        }
+
+        async function fetchResults() {
+            const { data } = await db.from('results').select('*').order('id', { ascending: false });
+            globalResults = data || [];
+
+            const container = document.getElementById('submittedResultsFeed');
+            container.innerHTML = globalResults.map(r => `
+                <div class="bg-esports-bg p-4 rounded-lg border border-esports-border space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-orbitron font-bold text-esports-cyan">${r.match_day} - ${r.team_name}</span>
+                        <span class="font-bold ${r.status === 'approved' ? 'text-green-400' : 'text-esports-gold'}">${r.status.toUpperCase()}</span>
+                    </div>
+                    <a href="${r.screenshot_url}" target="_blank" class="text-xs text-esports-gold hover:underline"><i class="fa-solid fa-image mr-1"></i> View Screenshot Proof</a>
+                </div>
+            `).join('');
+
+            renderAdminPendingResults(globalResults.filter(r => r.status === 'pending'));
+            calculatePointsTable();
+        }
+
+        /* ==========================================================================
+           POINTS TABLE ENGINE
+           ========================================================================== */
+        function calculatePointsTable() {
+            const approvedTeams = globalTeams.filter(t => t.status === 'approved');
+            const tableMap = {};
+
+            approvedTeams.forEach(t => {
+                tableMap[t.team_name] = {
+                    team_name: t.team_name,
+                    captain_name: t.captain_name,
+                    mp: 0, w: 0, l: 0, d: 0, gd: 0, pts: 0
+                };
             });
-        }
 
-        async function loadHomeTeams() {
-            if (!sb) return;
-            const grid = document.getElementById('home-approved-teams-grid');
-            const { data: teams } = await sb.from('teams').select('*').eq('status', 'approved');
+            globalFixtures.filter(f => f.status === 'completed').forEach(f => {
+                const t1 = tableMap[f.team1];
+                const t2 = tableMap[f.team2];
 
-            if (!teams || teams.length === 0) return;
+                if (t1 && t2) {
+                    t1.mp++; t2.mp++;
+                    t1.gd += (f.team1_score - f.team2_score);
+                    t2.gd += (f.team2_score - f.team1_score);
 
-            grid.innerHTML = teams.map(t => `
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center">
-                    <h4 class="font-bold text-amber-400 text-sm uppercase">${t.team_name}</h4>
-                    <p class="text-xs text-slate-500 mt-1">Captain: ${t.captain_name}</p>
-                </div>
-            `).join('');
-        }
-
-        // Gallery
-        async function loadGalleryGrid() {
-            if (!sb) return;
-            const grid = document.getElementById('gallery-images-grid');
-            const { data } = await sb.from('gallery').select('*').order('created_at', { ascending: false });
-
-            if (!data || data.length === 0) {
-                grid.innerHTML = '<p class="text-slate-500 text-sm col-span-full py-6 text-center">গ্যালারিতে কোনো ছবি নেই।</p>';
-                return;
-            }
-
-            grid.innerHTML = data.map(g => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                    <img src="${g.image_url}" class="w-full h-48 object-cover">
-                    <p class="p-3 text-xs text-slate-300 font-semibold text-center">${g.caption || ''}</p>
-                </div>
-            `).join('');
-        }
-
-        async function saveGalleryToSupabase() {
-            if (!sb) return;
-            const url = document.getElementById('admin-img-url').value;
-            const cap = document.getElementById('admin-img-cap').value;
-            if (!url) return;
-            await sb.from('gallery').insert([{ image_url: url, caption: cap }]);
-            alert("ছবি যোগ করা হয়েছে!");
-            loadGalleryGrid();
-        }
-
-        // ================= FULL ADMIN DASHBOARD LOGIC =================
-        async function loadAdminDashboard() {
-            if (!sb) return;
-
-            // 1. Pending Team Registrations
-            const pendingList = document.getElementById('admin-pending-teams-list');
-            const { data: pendingTeams } = await sb.from('teams').select('*').eq('status', 'pending');
-
-            if (!pendingTeams || pendingTeams.length === 0) {
-                pendingList.innerHTML = '<p class="text-slate-500 text-xs">কোনো পেন্ডিং টিম নেই।</p>';
-            } else {
-                pendingList.innerHTML = pendingTeams.map(t => `
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-                        <div>
-                            <h4 class="font-bold text-slate-200 text-xs uppercase">${t.team_name}</h4>
-                            <p class="text-[10px] text-slate-500">${t.captain_name}</p>
-                        </div>
-                        <button onclick="approveTeam('${t.id}')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px]">Approve</button>
-                    </div>
-                `).join('');
-            }
-
-            // 2. Fixture Dates Setup Box
-            const datesBox = document.getElementById('admin-fixture-dates-box');
-            const { data: fixtures } = await sb.from('fixtures').select('*').order('match_day', { ascending: true });
-
-            if (fixtures && fixtures.length > 0) {
-                datesBox.innerHTML = fixtures.map(f => `
-                    <div class="flex items-center justify-between text-xs py-1">
-                        <span class="text-slate-300">Match Day ${f.match_day}</span>
-                        <div class="flex items-center gap-1">
-                            <input type="text" id="f-date-${f.id}" value="${f.match_date}" class="bg-slate-950 border border-slate-800 px-2 py-0.5 rounded text-[11px] text-slate-200 w-28">
-                            <button onclick="updateFixtureDate('${f.id}')" class="bg-emerald-600 text-white px-2 py-0.5 rounded text-[10px]">Save</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // 3. Pending Squad Submissions Approval
-            const squadList = document.getElementById('admin-squad-approval-list');
-            const { data: squads } = await sb.from('squads').select('*, team:teams(team_name), fixture:fixtures(match_day)').eq('status', 'pending');
-
-            if (!squads || squads.length === 0) {
-                squadList.innerHTML = '<p class="text-slate-500 text-xs">কোনো পেন্ডিং স্কোয়াড জমা নেই।</p>';
-            } else {
-                squadList.innerHTML = squads.map(s => `
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
-                        <div class="flex justify-between text-xs font-bold text-amber-400">
-                            <span>${s.team ? s.team.team_name : 'Team'}</span>
-                            <span>Match Day ${s.fixture ? s.fixture.match_day : ''}</span>
-                        </div>
-                        <button onclick="approveSquad('${s.id}')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1 rounded-lg text-[11px] w-full mt-1">Approve Squad</button>
-                    </div>
-                `).join('');
-            }
-
-            // 4. Pending Results Approval & Edit Box (Football Format)
-            const resultList = document.getElementById('admin-result-approval-list');
-            const { data: results } = await sb.from('results').select('*, team:teams(team_name)').eq('status', 'pending');
-
-            if (!results || results.length === 0) {
-                resultList.innerHTML = '<p class="text-slate-500 text-xs">কোনো পেন্ডিং রেজাল্ট জমা পাওয়া যায়নি।</p>';
-            } else {
-                resultList.innerHTML = results.map(r => `
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex justify-between text-xs font-bold text-slate-200">
-                            <span class="text-amber-400">${r.team ? r.team.team_name : 'Team'}</span>
-                            <span class="text-purple-400">Match #${r.match_number}</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 text-xs">
-                            <div>
-                                <label class="text-[10px] text-slate-400 block mb-1">Wins (উইন)</label>
-                                <input type="number" id="res-wins-${r.id}" value="${r.wins || 0}" class="w-full bg-slate-900 border border-slate-800 p-1.5 rounded text-slate-200">
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-slate-400 block mb-1">Losses (লস)</label>
-                                <input type="number" id="res-loss-${r.id}" value="${r.losses || 0}" class="w-full bg-slate-900 border border-slate-800 p-1.5 rounded text-slate-200">
-                            </div>
-                        </div>
-                        <button onclick="approveResult('${r.id}')" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold w-full transition">এডিট ও এপ্রুভ করুন (Push to Points Table)</button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        async function approveTeam(teamId) {
-            if (!sb) return;
-            await sb.from('teams').update({ status: 'approved' }).eq('id', teamId);
-            alert("টিম সফলভাবে এপ্রুভ করা হয়েছে!");
-            loadAdminDashboard();
-        }
-
-        async function updateFixtureDate(fixtureId) {
-            if (!sb) return;
-            const newDate = document.getElementById(`f-date-${fixtureId}`).value;
-            await sb.from('fixtures').update({ match_date: newDate }).eq('id', fixtureId);
-            alert("ম্যাচ ডেট সেভ হয়েছে!");
-        }
-
-        async function approveSquad(squadId) {
-            if (!sb) return;
-            await sb.from('squads').update({ status: 'approved' }).eq('id', squadId);
-            alert("স্কোয়াড সফলভাবে এপ্রুভ করা হয়েছে!");
-            loadAdminDashboard();
-        }
-
-        async function approveResult(resultId) {
-            if (!sb) return;
-            const wins = parseInt(document.getElementById(`res-wins-${resultId}`).value) || 0;
-            const losses = parseInt(document.getElementById(`res-loss-${resultId}`).value) || 0;
-            const diff = wins - losses;
-            const pts = (wins * 3); // 3 points per win
-
-            await sb.from('results').update({
-                wins: wins,
-                losses: losses,
-                difference: diff,
-                total_points: pts,
-                status: 'approved'
-            }).eq('id', resultId);
-
-            alert("রেজাল্ট ও পয়েন্ট সফলভাবে এডিট ও এপ্রুভ করা হয়েছে!");
-            loadAdminDashboard();
-            loadPointsTable();
-        }
-
-        // Generate 12 Match Days
-        async function generate12Fixtures() {
-            if (!sb) return;
-            const { data: teams } = await sb.from('teams').select('id').eq('status', 'approved');
-
-            if (!teams || teams.length < 4) {
-                return alert("ফিক্সচার জেনারেট করতে কমপক্ষে ৪টি অনুমোদিত টিম প্রয়োজন!");
-            }
-
-            const fixturesList = [];
-            let day = 1;
-
-            for (let r = 0; r < 2; r++) {
-                for (let i = 0; i < teams.length; i++) {
-                    for (let j = i + 1; j < teams.length; j++) {
-                        if (day <= 12) {
-                            fixturesList.push({
-                                match_day: day,
-                                team_a_id: teams[i].id,
-                                team_b_id: teams[j].id,
-                                match_date: 'তারিখ সেট করুন'
-                            });
-                            day++;
-                        }
+                    if (f.team1_score > f.team2_score) {
+                        t1.w++; t1.pts += 3;
+                        t2.l++;
+                    } else if (f.team2_score > f.team1_score) {
+                        t2.w++; t2.pts += 3;
+                        t1.l++;
+                    } else {
+                        t1.d++; t1.pts += 1;
+                        t2.d++; t2.pts += 1;
                     }
                 }
-            }
-
-            await sb.from('fixtures').insert(fixturesList);
-            alert("১২টি ম্যাচ ফিক্সচার সফলভাবে তৈরি করা হয়েছে!");
-            loadAdminDashboard();
-        }
-
-        // Load Fixtures List
-        async function loadFixturesList() {
-            if (!sb) return;
-            const grid = document.getElementById('fixtures-display-grid');
-            const { data } = await sb.from('fixtures').select('*, team_a:teams!team_a_id(team_name), team_b:teams!team_b_id(team_name)').order('match_day', { ascending: true });
-
-            if (!data || data.length === 0) {
-                grid.innerHTML = '<p class="text-slate-500 text-sm col-span-full py-6 text-center">ফিক্সচার তৈরি করা হয়নি।</p>';
-                return;
-            }
-
-            grid.innerHTML = data.map(f => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-lg">
-                    <div class="flex justify-between text-xs text-amber-400 font-bold border-b border-slate-800 pb-2">
-                        <span>MATCH DAY ${f.match_day}</span>
-                        <span>${f.match_date}</span>
-                    </div>
-                    <div class="flex items-center justify-between text-sm font-bold text-slate-200 py-2">
-                        <span>${f.team_a ? f.team_a.team_name : 'Team A'}</span>
-                        <span class="text-xs text-slate-500">VS</span>
-                        <span>${f.team_b ? f.team_b.team_name : 'Team B'}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Football Points Table Calculations (Wins, Losses, Win Diff & Points)
-        async function loadPointsTable() {
-            if (!sb) return;
-            const tbody = document.getElementById('points-table-tbody');
-            const { data: teams } = await sb.from('teams').select('id, team_name').eq('status', 'approved');
-
-            if (!teams || teams.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-500">টিম ডাটা পাওয়া যায়নি।</td></tr>';
-                return;
-            }
-
-            const { data: results } = await sb.from('results').select('*').eq('status', 'approved');
-
-            let tableData = teams.map(t => {
-                let teamRes = results ? results.filter(r => r.team_id === t.id) : [];
-                let played = teamRes.length;
-                let wins = teamRes.reduce((acc, r) => acc + (r.wins || 0), 0);
-                let losses = teamRes.reduce((acc, r) => acc + (r.losses || 0), 0);
-                let diff = wins - losses;
-                let totalPts = teamRes.reduce((acc, r) => acc + (r.total_points || 0), 0);
-
-                return { team_name: t.team_name, played, wins, losses, diff, totalPts };
             });
 
-            // Sort by Points, Tie-breaker by Win Difference (WD)
-            tableData.sort((a, b) => b.totalPts - a.totalPts || b.diff - a.diff);
+            const sorted = Object.values(tableMap).sort((a, b) => b.pts - a.pts || b.gd - a.gd);
+            const tbody = document.getElementById('pointsTableBody');
 
-            tbody.innerHTML = tableData.map((t, idx) => `
-                <tr class="border-b border-slate-800/60">
-                    <td class="p-3.5 font-bold text-amber-400">#${idx + 1}</td>
-                    <td class="p-3.5 font-bold uppercase text-slate-200">${t.team_name}</td>
-                    <td class="p-3.5 text-slate-400">${t.played}</td>
-                    <td class="p-3.5 text-emerald-400 font-bold">${t.wins}</td>
-                    <td class="p-3.5 text-rose-400">${t.losses}</td>
-                    <td class="p-3.5 font-bold ${t.diff >= 0 ? 'text-amber-400' : 'text-red-400'}">${t.diff > 0 ? '+' + t.diff : t.diff}</td>
-                    <td class="p-3.5 font-bold text-amber-300">${t.totalPts}</td>
+            if (sorted.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-gray-400 font-orbitron">No approved teams in standings yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = sorted.map((t, idx) => `
+                <tr class="hover:bg-esports-bg/50 transition">
+                    <td class="p-4 text-center font-orbitron font-bold ${idx === 0 ? 'text-esports-gold' : 'text-gray-400'}">#${idx + 1}</td>
+                    <td class="p-4 font-bold text-white">${t.team_name}</td>
+                    <td class="p-4 text-center text-gray-300 text-xs">${t.captain_name}</td>
+                    <td class="p-4 text-center">${t.mp}</td>
+                    <td class="p-4 text-center text-green-400">${t.w}</td>
+                    <td class="p-4 text-center text-red-400">${t.l}</td>
+                    <td class="p-4 text-center text-gray-400">${t.d}</td>
+                    <td class="p-4 text-center font-bold ${t.gd >= 0 ? 'text-green-400' : 'text-red-400'}">${t.gd > 0 ? '+' + t.gd : t.gd}</td>
+                    <td class="p-4 text-center font-orbitron font-black text-esports-gold text-base">${t.pts}</td>
                 </tr>
             `).join('');
         }
 
-        // Initial Calls
-        loadNotice();
-        loadHomeTeams();
-// ==========================================
-// ১. ক্যাপ্টেন লগইন সেশন ম্যানেজমেন্ট
-// ==========================================
-function checkCaptainSession() {
-    if (!currentCaptainTeam) {
-        const saved = localStorage.getItem('currentCaptain');
-        if (saved) {
-            try { 
-                currentCaptainTeam = JSON.parse(saved); 
-            } catch(e) {
-                console.error("Session parse error", e);
+        /* ==========================================================================
+           HIGHLIGHTS GALLERY
+           ========================================================================== */
+        async function fetchHighlights() {
+            const { data } = await db.from('highlights').select('*').order('id', { ascending: false });
+            const container = document.getElementById('galleryContainer');
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 bg-esports-card rounded-xl text-gray-400 font-orbitron">No highlights posted yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = data.map(item => `
+                <div class="bg-esports-card rounded-xl border border-esports-border overflow-hidden shadow-xl hover:border-esports-cyan transition">
+                    <img src="${item.image_url}" alt="${item.title}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h4 class="font-orbitron font-bold text-sm text-gray-200">${item.title}</h4>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==========================================================================
+           ADMIN PANEL LOGIC
+           ========================================================================== */
+        function renderAdminPendingTeams(teams) {
+            const container = document.getElementById('adminPendingTeamsList');
+            if (teams.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic">No pending team approvals.</p>`;
+                return;
+            }
+
+            container.innerHTML = teams.map(t => `
+                <div class="bg-esports-bg p-3 rounded border border-esports-border flex items-center justify-between text-xs">
+                    <div>
+                        <span class="font-bold text-white uppercase">${t.team_name}</span>
+                        <span class="text-gray-400 block">Capt: ${t.captain_name}</span>
+                    </div>
+                    <button onclick="adminApproveTeam(${t.id})" class="bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-1.5 rounded">
+                        APPROVE
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function adminApproveTeam(teamId) {
+            const { error } = await db.from('teams').update({ status: 'approved' }).eq('id', teamId);
+            if (error) alert("Error approving team: " + error.message);
+            else {
+                alert("Team Approved!");
+                refreshAllData();
             }
         }
-    }
-    return currentCaptainTeam;
-}
-// ক্যাপ্টেন লগইন হ্যান্ডলার (HTML এর cap-login-email ও cap-login-pass আইডি দিয়ে)
-async function handleCaptainLogin(e) {
-    if (e) e.preventDefault();
-    
-    const emailInput = document.getElementById('cap-login-email');
-    const passInput = document.getElementById('cap-login-pass');
 
-    const email = emailInput ? emailInput.value.trim() : '';
-    const password = passInput ? passInput.value.trim() : '';
+        async function adminGenerateFixtures() {
+            const approved = globalTeams.filter(t => t.status === 'approved');
+            if (approved.length < 4) {
+                return alert("You need exactly 4 approved teams to generate 12 Match Days!");
+            }
 
-    if (!email || !password) {
-        alert("ইমেইল এবং পাসওয়ার্ড সঠিকভাবে পূরণ করুন!");
-        return;
-    }
+            const t = approved.map(x => x.team_name);
+            // 4 teams double round-robin = 12 match days
+            const schedule = [
+                { match_day: "Match Day 1", team1: t[0], team2: t[1] },
+                { match_day: "Match Day 2", team1: t[2], team2: t[3] },
+                { match_day: "Match Day 3", team1: t[0], team2: t[2] },
+                { match_day: "Match Day 4", team1: t[1], team2: t[3] },
+                { match_day: "Match Day 5", team1: t[0], team2: t[3] },
+                { match_day: "Match Day 6", team1: t[1], team2: t[2] },
+                // Round 2
+                { match_day: "Match Day 7", team1: t[1], team2: t[0] },
+                { match_day: "Match Day 8", team1: t[3], team2: t[2] },
+                { match_day: "Match Day 9", team1: t[2], team2: t[0] },
+                { match_day: "Match Day 10", team1: t[3], team2: t[1] },
+                { match_day: "Match Day 11", team1: t[3], team2: t[0] },
+                { match_day: "Match Day 12", team1: t[2], team2: t[1] },
+            ];
 
-    try {
-        const { data: team, error } = await sb.from('teams')
-            .select('*, players(*)')
-            .eq('email', email)
-            .eq('password', password)
-            .single();
+            // Clear old & Insert new
+            await db.from('fixtures').delete().neq('id', 0);
+            const { error } = await db.from('fixtures').insert(schedule);
 
-        if (error || !team) {
-            alert("ভুল ইমেইল বা পাসওয়ার্ড দেওয়া হয়েছে!");
-            return;
-        }
-
-        if (team.status !== 'approved') {
-            alert("আপনার টিম এখনো এডমিন কর্তৃক এপ্রুভ করা হয়নি!");
-            return;
-        }
-
-        // লগইন সফল - ব্রাউজারে সেশন সেভ
-        currentCaptainTeam = team;
-        localStorage.setItem('currentCaptain', JSON.stringify(team));
-
-        alert(`স্বাগতম ${team.captain_name || team.team_name || 'ক্যাপ্টেন'}! লগইন সফল হয়েছে।`);
-        
-        // লগইন শেষে সরাসরি হোম পেজে নিয়ে যাবে
-        navigateTo('view-home');
-    } catch (err) {
-        console.error("Login error:", err);
-        alert("লগইন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
-    }
-}
-
-// ==========================================
-// ২. স্কোয়াড সাবমিট ভিউ (Squad Submit)
-// ==========================================
-async function renderSquadSubmitView() {
-    const teamSession = checkCaptainSession();
-    const container = document.getElementById('squad-submission-box');
-    if (!container) return;
-
-    if (!teamSession) {
-        container.innerHTML = `
-            <div class="text-center p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
-                <p class="text-amber-400 text-sm font-medium mb-3">💡 স্কোয়াড জমা দেওয়ার জন্য আগে "ক্যাপ্টেন লগইন" সম্পন্ন করুন।</p>
-                <button onclick="navigateTo('view-home')" class="bg-amber-500 text-slate-950 px-4 py-2 rounded-xl font-bold text-xs shadow-md">হোম পেজে যান</button>
-            </div>`;
-        return;
-    }
-
-    container.innerHTML = `<div class="text-center text-slate-400 text-sm p-6">⏳ আপনার ডাটা ও ফিক্সচার লোড হচ্ছে...</div>`;
-
-    let team = teamSession;
-    let playerList = [];
-
-    try {
-        const { data: teamData } = await sb.from('teams').select('*, players(*)').eq('id', teamSession.id).single();
-        if (teamData) {
-            team = teamData;
-            if (teamData.players && Array.isArray(teamData.players)) {
-                playerList = teamData.players.map(p => p.name).filter(Boolean);
+            if (error) alert("Fixture generation failed: " + error.message);
+            else {
+                alert("12 Match Days Generated Successfully!");
+                refreshAllData();
             }
         }
-    } catch (err) {
-        console.log("Team fetch error:", err);
-    }
 
-    // ফিক্সচার থেকে শুধুমাত্র এই টিমের খেলার নির্ধারিত ম্যাচ ডে ফিল্টার করা
-    let captainMatchDays = [];
-    try {
-        const myTeamName = (team.team_name || team.name || '').trim().toLowerCase();
-        const { data: fixtures } = await sb.from('fixtures').select('*');
-        
-        if (fixtures && fixtures.length > 0) {
-            const myFixtures = fixtures.filter(f => 
-                (f.team1 && f.team1.trim().toLowerCase() === myTeamName) ||
-                (f.team2 && f.team2.trim().toLowerCase() === myTeamName)
-            );
+        function renderAdminPendingSquads(squads) {
+            const container = document.getElementById('adminPendingSquadsList');
+            if (squads.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic">No pending squads to verify.</p>`;
+                return;
+            }
+
+            container.innerHTML = squads.map(s => `
+                <div class="bg-esports-bg p-3 rounded border border-esports-border flex items-center justify-between text-xs">
+                    <div>
+                        <span class="font-bold text-esports-cyan">${s.match_day}</span>
+                        <span class="text-white block font-bold">${s.team_name}</span>
+                    </div>
+                    <button onclick="adminApproveSquad(${s.id}, '${s.match_day}')" class="bg-esports-cyan text-black font-bold px-3 py-1.5 rounded">
+                        APPROVE & CHECK MATCHUPS
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function adminApproveSquad(squadId, matchDay) {
+            await db.from('squads').update({ status: 'approved' }).eq('id', squadId);
             
-            const daysSet = new Set();
-            myFixtures.forEach(f => {
-                if (f.match_day) daysSet.add(f.match_day);
-            });
-            captainMatchDays = Array.from(daysSet);
-        }
-    } catch (err) {
-        console.log("Fixtures filter error:", err);
-    }
+            // Check if both teams for this match day have approved squads
+            const matchSquads = globalSquads.filter(s => s.match_day === matchDay && (s.status === 'approved' || s.id === squadId));
+            
+            if (matchSquads.length >= 2) {
+                // Auto generate random 5v5 player matchups!
+                const sq1 = matchSquads[0].selected_players;
+                const sq2 = matchSquads[1].selected_players;
 
-    let matchDayOptions = '';
-    if (captainMatchDays.length > 0) {
-        matchDayOptions = captainMatchDays.map(day => `<option value="${day}">${day}</option>`).join('');
-    } else {
-        for (let i = 1; i <= 12; i++) {
-            matchDayOptions += `<option value="Match Day ${i}">Match Day ${i}</option>`;
-        }
-    }
+                const shuffled2 = [...sq2].sort(() => 0.5 - Math.random());
+                const matchups = sq1.map((p1, idx) => ({ p1, p2: shuffled2[idx] }));
 
-    let playersHtml = playerList.map(pName => `
-        <label class="flex items-center gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-amber-500/50 transition">
-            <input type="checkbox" name="squad-player" value="${pName}" class="w-4 h-4 accent-amber-500">
-            <span class="text-sm font-medium text-slate-200">${pName}</span>
-        </label>
-    `).join('');
-
-    if (!playersHtml) {
-        playersHtml = `<p class="text-xs text-rose-400 p-2 border border-rose-500/20 rounded-lg">⚠️ টিমের প্লেয়ার তালিকা পাওয়া যায়নি।</p>`;
-    }
-
-    container.innerHTML = `
-        <div class="space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div>
-                    <h3 class="font-bold text-amber-400 text-base">${team.team_name || team.name || 'টিমের নাম'}</h3>
-                    <p class="text-xs text-slate-400">ক্যাপ্টেন: ${team.captain_name || team.captain || 'N/A'}</p>
-                </div>
-                <button onclick="logoutCaptain()" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg transition font-medium">
-                    🚪 লগআউট
-                </button>
-            </div>
-
-            <form onsubmit="handleSquadSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">আপনার খেলার নির্ধারিত ম্যাচ ডে নির্বাচন করুন:</label>
-                    <select id="squad-match-day" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                        ${matchDayOptions}
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs text-slate-400 mb-2">আজকের ৫ জন মূল প্লেয়ার টিক দিন (5vs5):</label>
-                    <div class="grid grid-cols-1 gap-2">${playersHtml}</div>
-                </div>
-
-                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-amber-500/10">
-                    স্কোয়াড সাবমিট করুন
-                </button>
-            </form>
-        </div>
-    `;
-}
-
-// স্কোয়াড সাবমিট করার ফাইনাল ও নিখুঁত হ্যান্ডলার
-async function handleSquadSubmit(e) {
-    if (e) e.preventDefault();
-    const team = checkCaptainSession();
-    if (!team) {
-        alert("ক্যাপ্টেন লগইন করা নেই!");
-        return;
-    }
-
-    const selectedBoxes = document.querySelectorAll('input[name="squad-player"]:checked');
-    const selectedPlayers = Array.from(selectedBoxes).map(cb => cb.value);
-
-    if (selectedPlayers.length === 0) {
-        alert("কমপক্ষে ১ জন প্লেয়ার নির্বাচন করুন!");
-        return;
-    }
-
-    try {
-        // Supabase squads টেবিলের হুবহু কলাম অনুযায়ী ডাটা
-        const payload = {
-            team_id: team.id,
-            selected_player_uids: selectedPlayers, // সুপাবেজের jsonb কলাম
-            status: 'pending'
-        };
-
-        const { data, error } = await sb.from('squads').insert([payload]);
-
-        if (error) {
-            console.error("Squad Submit Error Details:", error);
-            alert("ডাটাবেজ এরর: " + (error.message || JSON.stringify(error)));
-        } else {
-            alert("✅ আপনার স্কোয়াড সফলতা সহ জমা দেওয়া হয়েছে!\n\nএডমিন এপ্রুভের জন্য পাঠানো হয়েছে।");
-            navigateTo('view-home');
-        }
-    } catch (err) {
-        console.error("Catch Error:", err);
-        alert("সার্ভার ত্রুটি: " + err.message);
-    }
-}
-// ==========================================
-// ৩. রেজাল্ট/স্কোর সাবমিট (Result Submit)
-// ==========================================
-async function handleResultSubmit(e) {
-    if (e) e.preventDefault();
-    const team = checkCaptainSession();
-    if (!team) {
-        alert("রেজাল্ট সাবমিট করতে আগে লগইন করুন!");
-        return;
-    }
-
-    const matchDay = document.getElementById('result-match-day')?.value || 'Match Day 1';
-    const points = document.getElementById('result-points')?.value || 0;
-    const screenshot = document.getElementById('result-screenshot')?.value || '';
-
-    try {
-        const { error } = await sb.from('results').insert([{
-            team_id: team.id,
-            team_name: team.team_name || team.name,
-            match_day: matchDay,
-            points: parseInt(points),
-            screenshot_url: screenshot,
-            status: 'pending'
-        }]);
-
-        if (error) {
-            alert("রেজাল্ট জমা দিতে সমস্যা হয়েছে!");
-        } else {
-            alert(`✅ ${matchDay}-এর ম্যাচ রেজাল্ট জমা দেওয়া হয়েছে! এডমিন প্যানেল এপ্রুভ করার পর পয়েন্ট টেবিলে যুক্ত হবে।`);
-            navigateTo('view-home');
-        }
-    } catch (err) {
-        alert("সার্ভার এরর!");
-    }
-}
-
-// ==========================================
-// ৪. লগআউট
-// ==========================================
-function logoutCaptain() {
-    localStorage.removeItem('currentCaptain');
-    currentCaptainTeam = null;
-    alert("আপনি সফলভাবে লগআউট হয়েছেন!");
-    navigateTo('view-home');
-}
-        async function approveSquad(squadId, teamId, matchDay) {
-    try {
-        const { error: appErr } = await sb.from('squads')
-            .update({ status: 'approved' })
-            .eq('id', squadId);
-
-        if (appErr) {
-            alert("স্কোয়াড এপ্রুভ করতে সমস্যা হয়েছে: " + appErr.message);
-            return;
-        }
-
-        alert("✅ স্কোয়াড সফলতা সহ এপ্রুভ করা হয়েছে!");
-
-        const { data: approvedSquads } = await sb.from('squads')
-            .select('*')
-            .eq('match_day', matchDay)
-            .eq('status', 'approved');
-
-        if (approvedSquads && approvedSquads.length >= 2) {
-            const squad1 = approvedSquads[0];
-            const squad2 = approvedSquads[1];
-
-            const players1 = squad1.selected_player_uids || [];
-            const players2 = squad2.selected_player_uids || [];
-
-            const shuffled1 = [...players1].sort(() => 0.5 - Math.random());
-            const shuffled2 = [...players2].sort(() => 0.5 - Math.random());
-
-            const matchups = [];
-            const count = Math.min(shuffled1.length, shuffled2.length, 5);
-
-            for (let i = 0; i < count; i++) {
-                matchups.push({
-                    p1: shuffled1[i],
-                    p2: shuffled2[i],
-                    score1: 0,
-                    score2: 0
-                });
-            }
-
-            await sb.from('fixtures')
-                .update({ 
-                    matchups: matchups,
-                    status: 'ready' 
-                })
-                .eq('match_day', matchDay);
-
-            alert(`🎉 ${matchDay}-এর জন্য ৫v৫ রেন্ডম ম্যাচ তৈরি হয়ে গেছে! ফিক্সচার পেজে চেক করুন।`);
-        }
-
-        if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
-    } catch (err) {
-        console.error("Approve Squad Error:", err);
-    }
-}
-        async function renderFixturesView() {
-    const container = document.getElementById('fixtures-list-container');
-    if (!container) return;
-
-    container.innerHTML = `<div class="text-center text-slate-400 p-6">⏳ ফিক্সচার লোড হচ্ছে...</div>`;
-
-    try {
-        const { data: fixtures, error } = await sb.from('fixtures').select('*').order('id', { ascending: true });
-
-        if (error || !fixtures || fixtures.length === 0) {
-            container.innerHTML = `<p class="text-center text-slate-400">কোনো ফিক্সচার পাওয়া যায়নি।</p>`;
-            return;
-        }
-
-        let html = '';
-        fixtures.forEach(fix => {
-            const team1Score = fix.team1_score !== undefined && fix.team1_score !== null ? fix.team1_score : '-';
-            const team2Score = fix.team2_score !== undefined && fix.team2_score !== null ? fix.team2_score : '-';
-            const matchups = fix.matchups || [];
-
-            let matchupsHtml = '';
-            if (matchups.length > 0) {
-                matchupsHtml = `
-                    <div class="mt-3 pt-3 border-t border-slate-800 space-y-2">
-                        <p class="text-xs font-semibold text-amber-400 mb-2">⚔️ ৫v৫ রেন্ডম প্লেয়ার ম্যাচআপ:</p>
-                        ${matchups.map((m) => `
-                            <div class="flex justify-between items-center bg-slate-950 p-2 rounded-lg text-xs border border-slate-800">
-                                <span class="text-slate-300 font-medium">${m.p1}</span>
-                                <span class="text-amber-400 font-bold px-2 bg-amber-500/10 rounded">${m.score1} :${m.score2}</span>
-                                <span class="text-slate-300 font-medium">${m.p2}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
+                await db.from('fixtures').update({ matchups }).eq('match_day', matchDay);
+                alert("Both squads approved & Random 5v5 Player Matchups generated!");
             } else {
-                matchupsHtml = `<p class="text-xs text-slate-500 mt-2">⏳ দুই টিমের স্কোয়াড এপ্রুভ হলে এখানে ৫টি প্লেয়ার ম্যাচ দেখা যাবে।</p>`;
+                alert("Squad approved! Awaiting second team's squad submission.");
+            }
+            refreshAllData();
+        }
+
+        function renderAdminPendingResults(results) {
+            const container = document.getElementById('adminPendingResultsList');
+            if (results.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic">No pending results to verify.</p>`;
+                return;
             }
 
-            html += `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2 shadow-md mb-4">
-                    <div class="flex justify-between items-center text-xs text-amber-400 font-bold">
-                        <span>${fix.match_day || 'MATCH DAY'}</span>
-                        <span class="text-slate-400 font-normal">${fix.match_date || ''}</span>
+            container.innerHTML = results.map(r => `
+                <div class="bg-esports-bg p-3 rounded border border-esports-border space-y-2 text-xs">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-esports-accent">${r.match_day} - ${r.team_name}</span>
+                        <a href="${r.screenshot_url}" target="_blank" class="text-esports-gold hover:underline">Proof</a>
                     </div>
-
-                    <div class="flex justify-between items-center text-sm font-bold text-slate-100 bg-slate-950 p-3 rounded-xl border border-slate-800">
-                        <span class="w-2/5 text-left truncate">${fix.team1}</span>
-                        <span class="text-amber-400 text-base font-extrabold px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-lg">
-                            ${team1Score} : ${team2Score}
-                        </span>
-                        <span class="w-2/5 text-right truncate">${fix.team2}</span>
-                    </div>
-
-                    ${matchupsHtml}
+                    <button onclick="adminApproveResult(${r.id}, '${r.match_day}', ${JSON.stringify(r.scores).replace(/"/g, '&quot;')})" class="w-full bg-esports-accent text-white font-bold py-1.5 rounded">
+                        APPROVE MATCH SCORE
+                    </button>
                 </div>
-            `;
-        });
+            `).join('');
+        }
 
-        container.innerHTML = html;
-    } catch (err) {
-        console.error("Render Fixtures Error:", err);
-        container.innerHTML = `<p class="text-center text-rose-400">ফিক্সচার লোড করতে সমস্যা হয়েছে।</p>`;
-    }
-}
+        async function adminApproveResult(resultId, matchDay, scores) {
+            await db.from('results').update({ status: 'approved' }).eq('id', resultId);
+
+            // Compute Total Wins
+            let s1 = 0, s2 = 0;
+            scores.forEach(m => {
+                if (m.score1 > m.score2) s1++;
+                else if (m.score2 > m.score1) s2++;
+            });
+
+            await db.from('fixtures').update({
+                status: 'completed',
+                team1_score: s1,
+                team2_score: s2
+            }).eq('match_day', matchDay);
+
+            alert("Result approved and Points Table updated!");
+            refreshAllData();
+        }
+
+        async function handleAdminNoticeUpdate(e) {
+            e.preventDefault();
+            const content = document.getElementById('adminNoticeInput').value.trim();
+            const { error } = await db.from('notice').upsert({ id: 1, content });
+
+            if (error) alert("Failed to update notice: " + error.message);
+            else {
+                alert("Notice marquee updated!");
+                fetchNotice();
+            }
+        }
+
+        async function handleAdminHighlightUpload(e) {
+            e.preventDefault();
+            const title = document.getElementById('adminHighlightTitle').value.trim();
+            const image_url = document.getElementById('adminHighlightUrl').value.trim();
+
+            const { error } = await db.from('highlights').insert([{ title, image_url }]);
+
+            if (error) alert("Upload failed: " + error.message);
+            else {
+                alert("Poster uploaded to Gallery!");
+                fetchHighlights();
+            }
+        }
+
+        function renderDummyNotice() {
+            document.getElementById('noticeTickerText').innerText = "Notice: Please configure Supabase URL & Key at the bottom of the script to enable live database!";
+        }
     </script>
 </body>
 </html>
