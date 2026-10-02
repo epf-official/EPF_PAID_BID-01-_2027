@@ -634,7 +634,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             navigateTo('view-home');
         }
 
-   // Captain Login Function
+// Captain Login Function
 async function handleCaptainLogin(e) {
     e.preventDefault();
     if (!sb) return alert("সুপাবেজ কী সেট করা নেই!");
@@ -652,8 +652,9 @@ async function handleCaptainLogin(e) {
         localStorage.setItem('currentCaptain', JSON.stringify(data));
         alert(`স্বাগতম ক্যাপ্টেন ${data.captain_name} (${data.team_name})!`);
         
+        // স্কোয়াড ভিউ লোড ও নেভিগেট করা (পেজ রিফ্রেশ ছাড়া)
+        if (typeof renderSquadSubmitView === 'function') renderSquadSubmitView();
         navigateTo('view-squad');
-        location.reload(); // পেজ রিফ্রেশ হয়ে স্কোয়াড ও রেজাল্ট সাবমিট অপশন একটিভ হবে
     }
 }
 
