@@ -536,7 +536,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       let currentCaptainTeam = JSON.parse(localStorage.getItem('currentCaptain')) || null;
 
         // ================= VIEW SWITCHER (STRICT ISOLATED VIEWS) =================
-        function navigateTo(viewId) {
+  function navigateTo(viewId) {
     const views = document.querySelectorAll('.view-section');
     views.forEach(v => v.classList.remove('active'));
 
@@ -551,10 +551,9 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         if (viewId === 'view-points') loadPointsTable();
         if (viewId === 'view-gallery') loadGalleryGrid();
         if (viewId === 'view-admin') loadAdminDashboard();
-        if (viewId === 'view-squad') renderSquadSubmitView(); // <--- এই মিসিং লাইনটি যোগ করা হলো
+        if (viewId === 'view-squad') renderSquadSubmitView();
     }
 }
-
         // Generate Player Input Fields (6 to 8)
         function renderPlayerRegistrationFields() {
             const container = document.getElementById('players-fields-container');
@@ -998,6 +997,78 @@ async function handleCaptainLogin(e) {
         // Initial Calls
         loadNotice();
         loadHomeTeams();
+        // Squad Submit View Renderer
+function renderSquadSubmitView() {
+    if (!currentCaptainTeam) {
+        const saved = localStorage.getItem('currentCaptain');
+        if (saved) currentCaptainTeam = JSON.parse(saved);
+    }
+
+    const container = document.getElementById('squad-submission-box');
+    if (!container) return;
+
+    if (!currentCaptainTeam) {
+        container.innerHTML = `
+            <p class="text-xs text-amber-400 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20 text-center">
+                💡 স্কোয়াড জমা দেওয়ার জন্য আগে "ক্যাপ্টেন লগইন" সম্পন্ন করুন।
+            </p>`;
+        return;
+    }
+
+    const team = currentCaptainTeam;
+    const playerList = [team.p1_name, team.p2_name, team.p3_name, team.p4_name, team.p5_name, team.p6_name, team.p7_name, team.p8_name].filter(Boolean);
+    
+    let playersHtml = playerList.map(p => `
+        <label class="flex items-center gap-3 p-3 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer hover:border-amber-500/50 transition">
+            <input type="checkbox" name="squad-player" value="${p}" class="w-4 h-4 accent-amber-500">
+            <span class="text-sm font-medium text-slate-200">${p}</span>
+        </label>
+    `).join('');
+
+    container.innerHTML = `
+        <div class="space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div>
+                    <h3 class="font-bold text-amber-400 text-base">${team.team_name}</h3>
+                    <p class="text-xs text-slate-400">ক্যাপ্টেন: ${team.captain_name}</p>
+                </div>
+                <button onclick="logoutCaptain()" class="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg transition font-medium">
+                    🚪 লগআউট
+                </button>
+            </div>
+
+            <form onsubmit="handleSquadSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">ম্যাচ ডে নির্বাচন করুন</label>
+                    <select id="squad-match-day" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                        <option value="Match Day 1">Match Day 1</option>
+                        <option value="Match Day 2">Match Day 2</option>
+                        <option value="Match Day 3">Match Day 3</option>
+                        <option value="Match Day 4">Match Day 4</option>
+                        <option value="Match Day 5">Match Day 5</option>
+                        <option value="Match Day 6">Match Day 6</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-slate-400 mb-2">আজকের ৫ জন মূল প্লেয়ার টিক দিন (5vs5):</label>
+                    <div class="grid grid-cols-1 gap-2">${playersHtml}</div>
+                </div>
+
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-amber-500/10">
+                    স্কোয়াড সাবমিট করুন
+                </button>
+            </form>
+        </div>
+    `;
+}
+
+function logoutCaptain() {
+    localStorage.removeItem('currentCaptain');
+    currentCaptainTeam = null;
+    alert("আপনি সফলভাবে লগআউট হয়েছেন!");
+    navigateTo('view-home');
+}
     </script>
 </body>
 </html>
