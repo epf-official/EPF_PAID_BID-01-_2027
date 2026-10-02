@@ -533,7 +533,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_G8IE_FFpezE2MuujsiVxEg_A65_YJHx';
 // সরাসরি ক্লায়েন্ট তৈরি করুন (কোনো if কন্ডিশন ছাড়া)
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let currentCaptainTeam = null;
+       let currentCaptainTeam = JSON.parse(localStorage.getItem('currentCaptain')) || null;
 
         // ================= VIEW SWITCHER (STRICT ISOLATED VIEWS) =================
         function navigateTo(viewId) {
@@ -634,24 +634,28 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             navigateTo('view-home');
         }
 
-        // Captain Login
-        async function handleCaptainLogin(e) {
-            e.preventDefault();
-            if (!sb) return alert("সুপাবেজ কী সেট করা নেই!");
+   // Captain Login Function
+async function handleCaptainLogin(e) {
+    e.preventDefault();
+    if (!sb) return alert("সুপাবেজ কী সেট করা নেই!");
 
-            const email = document.getElementById('cap-login-email').value.trim();
-            const pass = document.getElementById('cap-login-pass').value.trim();
+    const email = document.getElementById('cap-login-email').value.trim();
+    const pass = document.getElementById('cap-login-pass').value.trim();
 
-            const { data, error } = await sb.from('teams').select('*').eq('email', email).eq('password', pass).single();
+    const { data, error } = await sb.from('teams').select('*').eq('email', email).eq('password', pass).single();
 
-            if (error || !data) {
-                alert("ভুল ইমেইল অথবা পাসওয়ার্ড!");
-            } else {
-                currentCaptainTeam = data;
-                alert(`স্বাগতম ক্যাপ্টেন ${data.captain_name} (${data.team_name})!`);
-                navigateTo('view-squad');
-            }
-        }
+    if (error || !data) {
+        alert("ভুল ইমেইল অথবা পাসওয়ার্ড!");
+    } else {
+        currentCaptainTeam = data;
+        // ব্রাউজারে ক্যাপ্টেন তথ্য সেভ রাখা
+        localStorage.setItem('currentCaptain', JSON.stringify(data));
+        alert(`স্বাগতম ক্যাপ্টেন ${data.captain_name} (${data.team_name})!`);
+        
+        navigateTo('view-squad');
+        location.reload(); // পেজ রিফ্রেশ হয়ে স্কোয়াড ও রেজাল্ট সাবমিট অপশন একটিভ হবে
+    }
+}
 
         // Admin Login
         function handleAdminLogin(e) {
