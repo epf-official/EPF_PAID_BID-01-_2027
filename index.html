@@ -1075,143 +1075,75 @@
         }
 
         /* ==========================================================================
-   RESULT SUBMISSION LOGIC (Simple & Clean)
-   ========================================================================== */
+           RESULT SUBMISSION LOGIC
+           ========================================================================== */
+        function loadMatchupsForResultForm() {
+            const matchDay = document.getElementById('resultMatchDaySelect').value;
+            const fixture = globalFixtures.find(f => f.match_day === matchDay);
+            const container = document.getElementById('matchupScoresContainer');
+            const list = document.getElementById('scoresInputsList');
 
-function loadMatchupsForResultForm() {
-    const matchDaySelect = document.getElementById('resultMatchdaySelect');
-    const container = document.getElementById('matchupScoresContainer');
-    const list = document.getElementById('scoresInputsList');
+            if (!fixture || !fixture.matchups || fixture.matchups.length === 0) {
+                container.classList.add('hidden');
+                return alert("Approved 5v5 player matchups do not exist for this match day yet!");
+            }
 
-    if (!matchDaySelect || !container || !list) return;
-
-    const matchDay = matchDaySelect.value;
-    const fixture = typeof globalFixtures !== 'undefined' ? globalFixtures.find(f => String(f.match_day) === String(matchDay)) : null;
-
-    // ফিক্সচারে ৫v৫ ম্যাচ-আপ না থাকলে খালি রাখবে
-    if (!fixture || !fixture.matchups || fixture.matchups.length === 0) {
-        container.classList.add('hidden');
-        return;
-    }
-
-    container.classList.remove('hidden');
-
-    // উভয় টিমের ৮ জনের স্কোয়াড বের করা (সোয়াপ করার জন্য)
-    const t1Squad = (typeof globalSquads !== 'undefined' ? globalSquads : [])
-        .filter(s => s.team_id == (fixture.team1_id || fixture.team_a_id))
-        .map(s => s.player_name || s.name);
-
-    const t2Squad = (typeof globalSquads !== 'undefined' ? globalSquads : [])
-        .filter(s => s.team_id == (fixture.team2_id || fixture.team_b_id))
-        .map(s => s.player_name || s.name);
-
-    // ফিক্সচারে জেনারেট হওয়া প্রতিটি ম্যাচের জন্য ইনপুট ও সোয়াপ ড্রপডাউন
-    list.innerHTML = fixture.matchups.map((m, idx) => {
-        const p1 = m.p1 || m.player1 || '';
-        const p2 = m.p2 || m.player2 || '';
-
-        const list1 = [...new Set([p1, ...t1Squad])].filter(Boolean);
-        const list2 = [...new Set([p2, ...t2Squad])].filter(Boolean);
-
-        return `
-            <div class="bg-esports-card p-2 rounded border border-gray-800 flex items-center justify-between gap-2 my-2">
-                <!-- টিম ১ প্লেয়ার (সোয়াপযোগ্য) -->
-                <select id="score_p1_name_${idx}" class="bg-slate-900 text-cyan-400 font-bold p-1 rounded border border-gray-700 text-xs w-5/12 focus:outline-none">
-                    ${list1.map(name => `<option value="${name}" ${name === p1 ? 'selected' : ''}>${name}</option>`).join('')}
-                </select>
-
-                <!-- ১v১ স্কোর -->
-                <div class="flex items-center gap-1 justify-center w-2/12">
-                    <input type="number" min="0" value="0" id="score_p1_${idx}" class="w-8 text-center bg-slate-900 border border-gray-700 rounded text-white font-bold p-1 text-xs">
+            container.classList.remove('hidden');
+            list.innerHTML = fixture.matchups.map((m, idx) => `
+                <div class="bg-esports-card p-2 rounded border border-esports-border flex items-center justify-between text-xs gap-2">
+                    <span class="font-bold text-gray-300 truncate w-1/3">${m.p1}</span>
+                    <input type="number" min="0" id="score_p1_${idx}" required class="w-12 bg-esports-bg border border-esports-border text-center rounded p-1 text-white font-bold" placeholder="0" />
                     <span class="text-gray-500 font-bold">-</span>
-                    <input type="number" min="0" value="0" id="score_p2_${idx}" class="w-8 text-center bg-slate-900 border border-gray-700 rounded text-white font-bold p-1 text-xs">
+                    <input type="number" min="0" id="score_p2_${idx}" required class="w-12 bg-esports-bg border border-esports-border text-center rounded p-1 text-white font-bold" placeholder="0" />
+                    <span class="font-bold text-gray-300 truncate w-1/3 text-right">${m.p2}</span>
                 </div>
+            `).join('');
+        }
 
-                <!-- টিম ২ প্লেয়ার (সোয়াপযোগ্য) -->
-                <select id="score_p2_name_${idx}" class="bg-slate-900 text-amber-400 font-bold p-1 rounded border border-gray-700 text-xs w-5/12 text-right focus:outline-none">
-                    ${list2.map(name => `<option value="${name}" ${name === p2 ? 'selected' : ''}>${name}</option>`).join('')}
-                </select>
-            </div>
-        `;
-    }).join('');
-}
+        async function handleResultSubmit(e) {
+            e.preventDefault();
+            if (!currentCaptainTeam) return alert("Captain Login Required!");
 
-async function handleResultsSubmit(e) {
-    e.preventDefault();
-    if (!currentCaptainTeam) return alert("Captain Login Required!");
+            const match_day = document.getElementById('resultMatchDaySelect').value;
+            const screenshot_url = document.getElementById('resultScreenshotUrl').value.trim();
+            const fixture = globalFixtures.find(f => f.match_day === matchDay);
 
-    const match_day = document.getElementById('resultMatchdaySelect').value;
-    const screenshot_url = document.getElementById('resultScreenshotUrl')?.value || '';
-    const fixture = typeof globalFixtures !== 'undefined' ? globalFixtures.find(f => String(f.match_day) === String(match_day)) : null;
+            const scores = [];
+            for (let i = 0; i < 5; i++) {
+                const s1 = parseInt(document.getElementById(`score_p1_${i}`).value) || 0;
+                const s2 = parseInt(document.getElementById(`score_p2_${i}`).value) || 0;
+                scores.push({ matchup_index: i, score1: s1, score2: s2 });
+            }
 
-    if (!fixture || !fixture.matchups) return alert("Matchup data not found!");
+            const { data, error } = await db.from('results').insert([
+                { match_day, team_id: currentCaptainTeam.id, team_name: currentCaptainTeam.team_name, scores, screenshot_url, status: 'pending' }
+            ]);
 
-    const scores = fixture.matchups.map((m, i) => ({
-        matchup_index: i,
-        player1: document.getElementById(`score_p1_name_${i}`)?.value || m.p1 || m.player1,
-        player2: document.getElementById(`score_p2_name_${i}`)?.value || m.p2 || m.player2,
-        score1: parseInt(document.getElementById(`score_p1_${i}`)?.value) || 0,
-        score2: parseInt(document.getElementById(`score_p2_${i}`)?.value) || 0
-    }));
+            if (error) alert("Result submission failed: " + error.message);
+            else {
+                alert("Match Result Submitted for Verification!");
+                refreshAllData();
+            }
+        }
 
-    const { data, error } = await db.from('results').insert([{
-        match_day: match_day,
-        team_id: currentCaptainTeam.id,
-        screenshot_url: screenshot_url,
-        scores: scores,
-        status: 'pending'
-    }]);
+        async function fetchResults() {
+            const { data } = await db.from('results').select('*').order('id', { ascending: false });
+            globalResults = data || [];
 
-    if (error) {
-        alert("Result submission failed: " + error.message);
-    } else {
-        alert("Match Result Submitted for Verification!");
-        if (typeof refreshAllData === 'function') await refreshAllData();
-    }
-}
+            const container = document.getElementById('submittedResultsFeed');
+            container.innerHTML = globalResults.map(r => `
+                <div class="bg-esports-bg p-4 rounded-lg border border-esports-border space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-orbitron font-bold text-esports-cyan">${r.match_day} - ${r.team_name}</span>
+                        <span class="font-bold ${r.status === 'approved' ? 'text-green-400' : 'text-esports-gold'}">${r.status.toUpperCase()}</span>
+                    </div>
+                    <a href="${r.screenshot_url}" target="_blank" class="text-xs text-esports-gold hover:underline"><i class="fa-solid fa-image mr-1"></i> View Screenshot Proof</a>
+                </div>
+            `).join('');
 
-                
-
-async function handleResultsSubmit(e) {
-    e.preventDefault();
-    if (!currentCaptainTeam) return alert("Captain Login Required!");
-
-    const match_day = document.getElementById('resultMatchdaySelect').value;
-    const screenshot_url = document.getElementById('resultScreenshotUrl').value;
-    const fixture = globalFixtures.find(f => f.match_day == match_day);
-
-    const scores = [];
-    for (let i = 0; i < 5; i++) {
-        const s1 = parseInt(document.getElementById(`score_p1_${i}`)?.value) || 0;
-        const s2 = parseInt(document.getElementById(`score_p2_${i}`)?.value) || 0;
-        const p1 = document.getElementById(`player_p1_${i}`)?.value || fixture?.matchups[i]?.p1 || '';
-        const p2 = document.getElementById(`player_p2_${i}`)?.value || fixture?.matchups[i]?.p2 || '';
-
-        scores.push({ 
-            matchup_index: i, 
-            player1: p1, 
-            player2: p2, 
-            score1: s1, 
-            score2: s2 
-        });
-    }
-
-    const { data, error } = await db.from('results').insert([{
-        match_day: match_day,
-        team_id: currentCaptainTeam.id,
-        screenshot_url: screenshot_url,
-        scores: scores,
-        status: 'pending'
-    }]);
-
-    if (error) {
-        alert("Result submission failed: " + error.message);
-    } else {
-        alert("Match Result Submitted for Verification!");
-        if (typeof refreshAllData === 'function') refreshAllData();
-    }
-}
-
+            renderAdminPendingResults(globalResults.filter(r => r.status === 'pending'));
+            calculatePointsTable();
+        }
 
         /* ==========================================================================
            POINTS TABLE ENGINE
